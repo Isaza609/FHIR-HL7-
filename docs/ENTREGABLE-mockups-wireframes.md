@@ -76,22 +76,22 @@ Se desarrollan las interfaces en código **tarea por tarea**. Al terminar cada t
 
 | # | Tarea | Qué hacer | Documentar al terminar | Estado |
 |---|-------|-----------|------------------------|--------|
-| 0.1 | Crear proyecto frontend | Crear app (ej. React + Vite, Vue o Next.js) en carpeta `frontend/`. Estructura: `src/pages/`, `src/components/`, `src/services/`. | En "Evidencia" de esta fila: ruta del proyecto (ej. `frontend/`). | Pendiente |
-| 0.2 | Configurar servidor FHIR | Variable/archivo de config con URL base del servidor FHIR (ej. `http://hapi.fhir.org/baseR4`). Crear `services/fhir.js` (o similar) con función para peticiones GET/PUT/POST. | Breve nota en README del frontend o aquí: URL usada. | Pendiente |
+| 0.1 | Crear proyecto frontend | Crear app (ej. React + Vite, Vue o Next.js) en carpeta `frontend/`. Estructura: `src/pages/`, `src/components/`, `src/services/`. | Evidencia: proyecto en `frontend/` (React + Vite). Estructura: `frontend/src/pages/`, `frontend/src/components/`, `frontend/src/services/`. | Cumplida |
+| 0.2 | Configurar servidor FHIR | Variable/archivo de config con URL base del servidor FHIR (ej. `http://hapi.fhir.org/baseR4`). Crear `services/fhir.js` (o similar) con función para peticiones GET/PUT/POST. | Evidencia: `frontend/src/config.js` (FHIR_BASE_URL = http://hapi.fhir.org/baseR4), `frontend/src/services/fhir.js` (fhirGet, fhirPut, fhirPost). README frontend y `.env.example` documentan la URL. | Cumplida |
 
 ### Fase 1 – Flujo paciente (Web + App responsive)
 
 | # | Tarea | Pantalla / checklist que cumple | Qué hacer | Documentar al terminar | Estado |
 |---|-------|----------------------------------|-----------|------------------------|--------|
-| 1.1 | Pantalla Inicio / sede | Web #1, App #1 | Página de inicio con selección de sede (Norte, Centro, Sur). Navegación a siguiente paso. | En tabla "Canal: Sitio web" y "App móvil", fila Inicio/sede: Evidencia = ruta del componente (ej. `frontend/src/pages/Inicio.jsx`), Estado = Cumplida. Opcional: captura en `docs/mockups/web/01-inicio-sede.png`. | Pendiente |
-| 1.2 | Pantalla Servicio / profesional | Web #2 | Selección de servicio médico y/o profesional (listado desde HealthcareService o PractitionerRole). | Tabla Web: fila "Selección de servicio o profesional" → Evidencia + Estado Cumplida. | Pendiente |
-| 1.3 | Servicio FHIR: Slot libres | — | En `services/`: función que llame `GET Slot?status=free&schedule=...` (y opcionalmente por location). Usar `config/filtros-servidor-publico.json` o IDs de Schedule. | Sin checklist; opcional: anotar en README que el servicio está en `frontend/src/services/slot.js` (o nombre usado). | Pendiente |
-| 1.4 | Pantalla Disponibilidad | Web #3, App #2 | Mostrar Slot libres (fecha, hora) según sede/servicio elegidos. Permitir elegir un Slot. | Tablas Web y App: fila "Consulta de disponibilidad" / "Disponibilidad" → Evidencia + Cumplida. Opcional: captura. | Pendiente |
-| 1.5 | Pantalla Datos paciente / tipo consulta | Web #4 | Formulario: identificar paciente (o seleccionar), tipo de consulta (primera vez, control, telemedicina, general/especializada). | Tabla Web: fila "Datos del paciente / tipo de consulta" → Evidencia + Cumplida. | Pendiente |
-| 1.6 | Servicio FHIR: Appointment y Slot busy | — | Función para crear `POST Appointment` (con slot, participant Patient + PractitionerRole, serviceType, start, end). Lógica o endpoint para actualizar Slot a `status: busy` (PUT). | README o comentario en código; sin fila en checklist. | Pendiente |
-| 1.7 | Pantalla Confirmación de cita | Web #5, App #3 | Tras agendar, mostrar resumen (hora inicio/fin, servicio, médico) como AppointmentResponse. | Tablas Web y App: fila "Confirmación de cita" / "Agendar y confirmar" → Evidencia + Cumplida. Opcional: captura. | Pendiente |
-| 1.8 | Pantalla Mis citas | Web #6, App #4 (parcial) | Listado de citas del paciente (GET Appointment?actor=Patient/... o equivalente). Enlaces a cancelar. | Tablas Web y App: fila "Mis citas" / "Mis citas / cancelar" (listado) → Evidencia + Cumplida. | Pendiente |
-| 1.9 | Pantalla Cancelación + servicio | Web #7, App #4 | Formulario/modal para cancelar cita: motivo (cancelationReason). Servicio: PUT Appointment (status=cancelled, cancelationReason), PUT Slot (status=free). | Tablas Web y App: fila "Cancelación de cita" → Evidencia + Cumplida. Opcional: captura. | Pendiente |
+| 1.1 | Pantalla Inicio / sede | Web #1, App #1 | Página de inicio con selección de sede (Norte, Centro, Sur). Navegación a siguiente paso. | Evidencia: `frontend/src/pages/Inicio.jsx`. Checklist Web #1 y App #1 → Cumplida. | Cumplida |
+| 1.2 | Pantalla Servicio / profesional | Web #2 | Selección de servicio médico y/o profesional (listado desde HealthcareService o PractitionerRole). | Evidencia: `frontend/src/pages/Servicios.jsx` (GET HealthcareService?location=...). Checklist Web #2 → Cumplida. | Cumplida |
+| 1.3 | Servicio FHIR: Slot libres | — | En `services/`: función que llame `GET Slot?status=free&schedule=...` (y opcionalmente por location). Usar `config/filtros-servidor-publico.json` o IDs de Schedule. | Evidencia: `frontend/src/services/slot.js` (getSlotsFree, getSlotsFreeBySchedule; DEFAULT_SCHEDULE_IDS). README frontend actualizado. | Cumplida |
+| 1.4 | Pantalla Disponibilidad | Web #3, App #2 | Mostrar Slot libres (fecha, hora) según sede/servicio elegidos. Permitir elegir un Slot. | Evidencia: `frontend/src/pages/Disponibilidad.jsx` (filtro por HealthcareService, formato fecha/hora, botón Elegir). Checklist Web #3 y App #2 → Cumplida. | Cumplida |
+| 1.5 | Pantalla Datos paciente / tipo consulta | Web #4 | Formulario: identificar paciente (o seleccionar), tipo de consulta (primera vez, control, telemedicina, general/especializada). | Evidencia: `frontend/src/pages/DatosPaciente.jsx` (select Patient, select tipo consulta). Checklist Web #4 → Cumplida. | Cumplida |
+| 1.6 | Servicio FHIR: Appointment y Slot busy | — | Función para crear `POST Appointment` (con slot, participant Patient + PractitionerRole, serviceType, start, end). Lógica o endpoint para actualizar Slot a `status: busy` (PUT). | Evidencia: `frontend/src/services/appointment.js` (createAppointmentAndReserveSlot, getPractitionerRoleForSlot; PUT Appointment y PUT Slot busy). | Cumplida |
+| 1.7 | Pantalla Confirmación de cita | Web #5, App #3 | Tras agendar, mostrar resumen (hora inicio/fin, servicio, médico) como AppointmentResponse. | Evidencia: `frontend/src/pages/Confirmacion.jsx` (resumen con servicio, médico, n.º cita); AppointmentResponse creado en `appointment.js`. Checklist Web #5 y App #3 → Cumplida. | Cumplida |
+| 1.8 | Pantalla Mis citas | Web #6, App #4 (parcial) | Listado de citas del paciente (GET Appointment?actor=Patient/... o equivalente). Enlaces a cancelar. | Evidencia: `frontend/src/pages/MisCitas.jsx` (selector paciente, GET Appointment?actor=Patient/..., botón Cancelar). Checklist Web #6 y App #4 (listado) → Cumplida. | Cumplida |
+| 1.9 | Pantalla Cancelación + servicio | Web #7, App #4 | Formulario/modal para cancelar cita: motivo (cancelationReason). Servicio: PUT Appointment (status=cancelled, cancelationReason), PUT Slot (status=free). | Evidencia: `frontend/src/pages/CancelarCita.jsx` + `services/appointment.js` (cancelAppointment). Checklist Web #7 y App #4 → Cumplida. | Cumplida |
 
 ### Fase 2 – Vista operador (Call Center)
 
@@ -131,13 +131,13 @@ Marcar cuando exista **wireframe, mockup o implementación** correspondiente. Si
 
 | # | Pantalla / flujo | Descripción breve | Evidencia (mockup o implementación) | Estado |
 |---|------------------|-------------------|-------------------------------------|--------|
-| 1 | Inicio o selección de sede | Elegir sede (Norte, Centro, Sur) o punto de partida | | Pendiente |
-| 2 | Selección de servicio o profesional | Elegir servicio médico y/o profesional (opcional) | | Pendiente |
-| 3 | Consulta de disponibilidad | Listado o calendario de Slot libres (fecha, hora) | | Pendiente |
-| 4 | Datos del paciente / tipo de consulta | Formulario para identificar paciente y tipo de consulta (primera vez, control, telemedicina, etc.) | | Pendiente |
-| 5 | Confirmación de cita | Resumen de la cita y confirmación (equivalente a AppointmentResponse) | | Pendiente |
-| 6 | Mis citas o historial | Listado de citas del paciente (para cancelar o consultar) | | Pendiente |
-| 7 | Cancelación de cita | Pantalla para cancelar y, si aplica, indicar motivo | | Pendiente |
+| 1 | Inicio o selección de sede | Elegir sede (Norte, Centro, Sur) o punto de partida | `frontend/src/pages/Inicio.jsx` | Cumplida |
+| 2 | Selección de servicio o profesional | Elegir servicio médico y/o profesional (opcional) | `frontend/src/pages/Servicios.jsx` (listado desde HealthcareService por Location) | Cumplida |
+| 3 | Consulta de disponibilidad | Listado o calendario de Slot libres (fecha, hora) | `frontend/src/pages/Disponibilidad.jsx` (filtro por servicio, fecha/hora, Elegir slot) | Cumplida |
+| 4 | Datos del paciente / tipo de consulta | Formulario para identificar paciente y tipo de consulta (primera vez, control, telemedicina, etc.) | `frontend/src/pages/DatosPaciente.jsx` | Cumplida |
+| 5 | Confirmación de cita | Resumen de la cita y confirmación (equivalente a AppointmentResponse) | `frontend/src/pages/Confirmacion.jsx` (servicio, médico, AppointmentResponse) | Cumplida |
+| 6 | Mis citas o historial | Listado de citas del paciente (para cancelar o consultar) | `frontend/src/pages/MisCitas.jsx` | Cumplida |
+| 7 | Cancelación de cita | Pantalla para cancelar y, si aplica, indicar motivo | `frontend/src/pages/CancelarCita.jsx` + `cancelAppointment` en appointment.js | Cumplida |
 
 #### Canal: Aplicación móvil
 
@@ -146,9 +146,9 @@ Marcar cuando exista **wireframe, mockup o implementación** correspondiente. Si
 | # | Pantalla / flujo | Descripción breve | Evidencia (mockup o implementación) | Estado |
 |---|------------------|-------------------|---------------------|--------|
 | 1 | Inicio / sede o servicio | Punto de entrada (sede, servicio o “agendar cita”) | | Pendiente |
-| 2 | Disponibilidad | Slot libres (por fecha/hora) | | Pendiente |
-| 3 | Agendar y confirmar | Datos paciente, tipo consulta, confirmación (AppointmentResponse) | | Pendiente |
-| 4 | Mis citas / cancelar | Ver citas y opción de cancelar (motivo si aplica) | | Pendiente |
+| 2 | Disponibilidad | Slot libres (por fecha/hora) | `frontend/src/pages/Disponibilidad.jsx` + `services/slot.js` | Cumplida |
+| 3 | Agendar y confirmar | Datos paciente, tipo consulta, confirmación (AppointmentResponse) | `frontend/src/pages/DatosPaciente.jsx` + `Confirmacion.jsx` + `services/appointment.js` | Cumplida |
+| 4 | Mis citas / cancelar | Ver citas y opción de cancelar (motivo si aplica) | `frontend/src/pages/MisCitas.jsx` + `CancelarCita.jsx` | Cumplida |
 
 #### Canal: Call Center (operador)
 

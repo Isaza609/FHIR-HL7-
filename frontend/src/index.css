@@ -1,0 +1,72 @@
+/* Base: aspecto hospital / clínica – limpio, tranquilo, profesional */
+:root {
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #1e293b;
+  background-color: #f0f9ff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Paleta hospitalaria */
+  --hospital-primary: #0f766e;
+  --hospital-primary-hover: #0d9488;
+  --hospital-bg: #f0f9ff;
+  --hospital-card: #ffffff;
+  --hospital-border: #e2e8f0;
+  --hospital-text: #1e293b;
+  --hospital-text-muted: #64748b;
+  --hospital-accent: #0d9488;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--hospital-bg);
+}
+
+a {
+  font-weight: 500;
+  color: var(--hospital-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--hospital-primary-hover);
+  text-decoration: underline;
+}
+
+h1, h2, h3 {
+  color: var(--hospital-text);
+  font-weight: 600;
+}
+
+h2 {
+  font-size: 1.35rem;
+  margin: 0 0 0.5rem;
+}
+
+button {
+  border-radius: 6px;
+  border: 1px solid var(--hospital-border);
+  padding: 0.5em 1em;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--hospital-card);
+  color: var(--hospital-text);
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+button:hover {
+  background-color: #f1f5f9;
+  border-color: var(--hospital-primary);
+}

@@ -1,0 +1,292 @@
+/* Layout común – estilo hospital / clínica */
+.pagina,
+.inicio {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--hospital-bg);
+}
+
+/* Cabecera institucional */
+.header {
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.2);
+}
+
+.header .logo {
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.header .logo:hover {
+  color: #e0f2f1;
+  text-decoration: none;
+}
+
+.tagline {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  opacity: 0.95;
+  font-weight: 400;
+}
+
+.main {
+  flex: 1;
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  width: 100%;
+  text-align: left;
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: var(--hospital-primary);
+}
+
+/* Inicio – tarjetas de sedes (estilo consultorio / puntos de atención) */
+.sedes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.sede-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border: 1px solid var(--hospital-border);
+  border-radius: 8px;
+  border-left: 4px solid var(--hospital-primary);
+  background: var(--hospital-card);
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow 0.2s, border-left-color 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.sede-card:hover {
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.12);
+  border-left-color: var(--hospital-primary-hover);
+  text-decoration: none;
+  color: inherit;
+}
+
+.sede-name {
+  font-weight: 600;
+  color: var(--hospital-text);
+  font-size: 1.05rem;
+}
+
+.sede-id {
+  font-size: 0.8rem;
+  color: var(--hospital-text-muted);
+  margin-top: 0.35rem;
+}
+
+.intro {
+  color: var(--hospital-text-muted);
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+}
+
+/* Listas – servicios y slots (estilo listado clínico) */
+.lista-servicios,
+.lista-slot {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  border: 1px solid var(--hospital-border);
+  border-radius: 8px;
+  background: var(--hospital-card);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.lista-servicios li,
+.lista-slot li {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--hospital-border);
+}
+
+.lista-servicios li:last-child,
+.lista-slot li:last-child {
+  border-bottom: none;
+}
+
+.servicio-link {
+  font-weight: 500;
+  color: var(--hospital-primary);
+}
+
+.servicio-link:hover {
+  color: var(--hospital-primary-hover);
+}
+
+.slot-id {
+  font-size: 0.8rem;
+  color: var(--hospital-text-muted);
+  margin-left: 0.5rem;
+}
+
+.slot-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.slot-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.slot-date {
+  font-weight: 500;
+  color: var(--hospital-text);
+}
+
+.slot-time {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--hospital-text-muted);
+}
+
+.btn-elegir {
+  background: var(--hospital-primary);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-elegir:hover {
+  background: var(--hospital-primary-hover);
+}
+
+.btn-cancelar {
+  background: transparent;
+  color: #b91c1c;
+  border: 1px solid #b91c1c;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.btn-cancelar:hover {
+  background: #fef2f2;
+}
+
+.btn-cancelar-submit {
+  margin-top: 0.5rem;
+  background: #b91c1c;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-cancelar-submit:hover:not(:disabled) {
+  background: #991b1b;
+}
+
+.btn-cancelar-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Formulario datos paciente */
+.form-cita {
+  margin-top: 1.5rem;
+  max-width: 28rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--hospital-text);
+  margin-bottom: 0.35rem;
+}
+
+.form-group select,
+.form-group input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--hospital-border);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.btn-submit {
+  margin-top: 0.5rem;
+  background: var(--hospital-primary);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: var(--hospital-primary-hover);
+}
+
+.btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.confirmacion-ok {
+  color: var(--hospital-primary);
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.confirmacion-detalle {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.confirmacion-detalle li {
+  padding: 0.35rem 0;
+  border-bottom: none;
+}
+
+.error {
+  color: #b91c1c;
+  background: #fef2f2;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border-left: 4px solid #b91c1c;
+}
+
+.info {
+  color: var(--hospital-text-muted);
+  font-size: 0.875rem;
+}
+
+/* Mensaje de carga */
+.main > p {
+  color: var(--hospital-text-muted);
+}

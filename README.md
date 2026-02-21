@@ -128,6 +128,7 @@ FHIR HL7/
 │   ├── Slot/
 │   ├── Appointment/
 │   └── AppointmentResponse/
+├── frontend/                  # App web (React + Vite) para agendamiento – ver frontend/README.md
 ├── postman/                   # Colección y entorno para Postman (hapi.fhir.org/baseR4)
 │   ├── ACME-Salud-FHIR-R4.postman_collection.json
 │   ├── ACME-Salud-HAPI-baseR4.postman_environment.json
