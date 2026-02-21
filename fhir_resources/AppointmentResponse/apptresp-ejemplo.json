@@ -1,0 +1,8 @@
+{
+  "resourceType": "AppointmentResponse",
+  "id": "apptresp-ejemplo",
+  "meta": { "profile": ["http://hl7.org/fhir/StructureDefinition/AppointmentResponse"] },
+  "appointment": { "reference": "Appointment/appt-ejemplo" },
+  "actor": { "reference": "Patient/pat-ejemplo-001" },
+  "participantStatus": "accepted"
+}

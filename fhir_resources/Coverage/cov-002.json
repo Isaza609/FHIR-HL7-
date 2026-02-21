@@ -1,0 +1,8 @@
+{
+  "resourceType": "Coverage",
+  "id": "cov-002",
+  "meta": { "profile": ["http://hl7.org/fhir/StructureDefinition/Coverage"] },
+  "status": "active",
+  "beneficiary": { "reference": "Patient/pat-ejemplo-002" },
+  "payor": [{ "reference": "Organization/org-aseguradora-salud-cooperativa" }]
+}

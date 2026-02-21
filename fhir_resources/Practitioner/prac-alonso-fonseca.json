@@ -1,0 +1,12 @@
+{
+  "resourceType": "Practitioner",
+  "id": "prac-alonso-fonseca",
+  "meta": { "profile": ["http://hl7.org/fhir/StructureDefinition/Practitioner"] },
+  "identifier": [
+    {
+      "system": "http://www.minsalud.gov.co/tarjeta-profesional",
+      "value": "777666555"
+    }
+  ],
+  "name": [{ "family": "Fonseca", "given": ["Alonso"], "use": "official" }]
+}

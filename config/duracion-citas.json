@@ -1,0 +1,39 @@
+{
+  "description": "Matriz de duración de citas (minutos) según tipo de consulta y aseguradora - RF-09",
+  "aseguradoras": {
+    "Salud-Completa": { "id": "org-aseguradora-salud-completa" },
+    "Salud-Cooperativa": { "id": "org-aseguradora-salud-cooperativa" }
+  },
+  "reglas": [
+    {
+      "tipoConsulta": "primera-vez-medicina-general",
+      "Salud-Cooperativa": 30,
+      "Salud-Completa": 45
+    },
+    {
+      "tipoConsulta": "primera-vez-especializada",
+      "Salud-Cooperativa": 45,
+      "Salud-Completa": 60
+    },
+    {
+      "tipoConsulta": "control-medicina-general",
+      "Salud-Cooperativa": 20,
+      "Salud-Completa": 30
+    },
+    {
+      "tipoConsulta": "control-especializada",
+      "Salud-Cooperativa": 30,
+      "Salud-Completa": 45
+    },
+    {
+      "tipoConsulta": "control-telemedicina-general",
+      "Salud-Cooperativa": 15,
+      "Salud-Completa": 25
+    },
+    {
+      "tipoConsulta": "control-telemedicina-especializada",
+      "Salud-Cooperativa": 20,
+      "Salud-Completa": 30
+    }
+  ]
+}

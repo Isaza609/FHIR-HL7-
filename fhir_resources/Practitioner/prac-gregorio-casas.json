@@ -1,0 +1,12 @@
+{
+  "resourceType": "Practitioner",
+  "id": "prac-gregorio-casas",
+  "meta": { "profile": ["http://hl7.org/fhir/StructureDefinition/Practitioner"] },
+  "identifier": [
+    {
+      "system": "http://www.minsalud.gov.co/tarjeta-profesional",
+      "value": "111222333"
+    }
+  ],
+  "name": [{ "family": "Casas", "given": ["Gregorio"], "use": "official" }]
+}

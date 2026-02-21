@@ -1,0 +1,10 @@
+{
+  "resourceType": "Schedule",
+  "id": "sched-hs-pediatria-2025-02",
+  "meta": { "profile": ["http://hl7.org/fhir/StructureDefinition/Schedule"] },
+  "actor": [{ "reference": "HealthcareService/hs-pediatria-norte" }],
+  "planningHorizon": {
+    "start": "2025-02-01T00:00:00-05:00",
+    "end": "2025-02-28T23:59:59-05:00"
+  }
+}

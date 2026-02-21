@@ -1,0 +1,9 @@
+{
+  "resourceType": "HealthcareService",
+  "id": "hs-medicina-general-sur",
+  "meta": { "profile": ["http://hl7.org/fhir/StructureDefinition/HealthcareService"] },
+  "name": "Medicina general - Sur",
+  "active": true,
+  "providedBy": { "reference": "Organization/org-acme-salud" },
+  "location": [{ "reference": "Location/loc-sur" }]
+}

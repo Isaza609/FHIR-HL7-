@@ -1,0 +1,12 @@
+{
+  "resourceType": "Practitioner",
+  "id": "prac-elmer-luna",
+  "meta": { "profile": ["http://hl7.org/fhir/StructureDefinition/Practitioner"] },
+  "identifier": [
+    {
+      "system": "http://www.minsalud.gov.co/tarjeta-profesional",
+      "value": "222333444"
+    }
+  ],
+  "name": [{ "family": "Luna", "given": ["Elmer"], "use": "official" }]
+}

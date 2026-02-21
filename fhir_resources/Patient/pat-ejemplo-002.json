@@ -1,0 +1,12 @@
+{
+  "resourceType": "Patient",
+  "id": "pat-ejemplo-002",
+  "meta": { "profile": ["http://hl7.org/fhir/StructureDefinition/Patient"] },
+  "identifier": [
+    {
+      "system": "http://www.minsalud.gov.co/cedula",
+      "value": "987654321"
+    }
+  ],
+  "name": [{ "family": "García", "given": ["Carlos"], "use": "official" }]
+}

@@ -1,0 +1,2 @@
+# Scripts de carga y consulta al servidor FHIR
+requests>=2.28.0

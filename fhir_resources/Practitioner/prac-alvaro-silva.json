@@ -1,0 +1,12 @@
+{
+  "resourceType": "Practitioner",
+  "id": "prac-alvaro-silva",
+  "meta": { "profile": ["http://hl7.org/fhir/StructureDefinition/Practitioner"] },
+  "identifier": [
+    {
+      "system": "http://www.minsalud.gov.co/tarjeta-profesional",
+      "value": "444777333"
+    }
+  ],
+  "name": [{ "family": "Silva", "given": ["Álvaro"], "use": "official" }]
+}

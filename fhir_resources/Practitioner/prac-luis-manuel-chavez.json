@@ -1,0 +1,12 @@
+{
+  "resourceType": "Practitioner",
+  "id": "prac-luis-manuel-chavez",
+  "meta": { "profile": ["http://hl7.org/fhir/StructureDefinition/Practitioner"] },
+  "identifier": [
+    {
+      "system": "http://www.minsalud.gov.co/tarjeta-profesional",
+      "value": "333444555"
+    }
+  ],
+  "name": [{ "family": "Chávez", "given": ["Luis", "Manuel"], "use": "official" }]
+}

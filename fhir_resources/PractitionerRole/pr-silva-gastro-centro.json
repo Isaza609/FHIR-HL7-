@@ -1,0 +1,9 @@
+{
+  "resourceType": "PractitionerRole",
+  "id": "pr-silva-gastro-centro",
+  "meta": { "profile": ["http://hl7.org/fhir/StructureDefinition/PractitionerRole"] },
+  "practitioner": { "reference": "Practitioner/prac-alvaro-silva" },
+  "organization": { "reference": "Organization/org-acme-salud" },
+  "location": [{ "reference": "Location/loc-centro" }],
+  "healthcareService": [{ "reference": "HealthcareService/hs-gastroenterologia-centro" }]
+}

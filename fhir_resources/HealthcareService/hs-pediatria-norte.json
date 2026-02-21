@@ -1,0 +1,9 @@
+{
+  "resourceType": "HealthcareService",
+  "id": "hs-pediatria-norte",
+  "meta": { "profile": ["http://hl7.org/fhir/StructureDefinition/HealthcareService"] },
+  "name": "Pediatría - Norte",
+  "active": true,
+  "providedBy": { "reference": "Organization/org-acme-salud" },
+  "location": [{ "reference": "Location/loc-norte" }]
+}

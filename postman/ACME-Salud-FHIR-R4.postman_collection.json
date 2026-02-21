@@ -1,0 +1,253 @@
+{
+  "info": {
+    "name": "ACME Salud - FHIR R4",
+    "description": "Peticiones al servidor HAPI FHIR público (baseR4) para el proyecto de interoperabilidad de agendas ACME Salud.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://hapi.fhir.org/baseR4"
+    }
+  ],
+  "item": [
+    {
+      "name": "Metadatos",
+      "item": [
+        {
+          "name": "GET CapabilityStatement (metadata)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/fhir+json" }
+            ],
+            "url": "{{baseUrl}}/metadata",
+            "description": "Verifica que el servidor R4 responde y muestra capacidades."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Organization",
+      "item": [
+        {
+          "name": "GET Organization por id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Organization/org-acme-salud",
+            "description": "Obtiene ACME Salud."
+          }
+        },
+        {
+          "name": "GET Buscar Organizations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Organization?name=ACME",
+            "description": "Busca organizaciones por nombre."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Location",
+      "item": [
+        {
+          "name": "GET Location por id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Location/loc-norte",
+            "description": "Obtiene una sede (ej. Norte). Cambiar id: loc-centro, loc-sur."
+          }
+        },
+        {
+          "name": "GET Todas las Location",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Location",
+            "description": "Lista todas las ubicaciones."
+          }
+        }
+      ]
+    },
+    {
+      "name": "HealthcareService",
+      "item": [
+        {
+          "name": "GET HealthcareService por id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/HealthcareService/hs-pediatria-norte",
+            "description": "Obtiene un servicio (ej. Pediatría Norte)."
+          }
+        },
+        {
+          "name": "GET Buscar por Location",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/HealthcareService?location=Location/loc-norte",
+            "description": "Servicios de la sede Norte."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Practitioner",
+      "item": [
+        {
+          "name": "GET Practitioner por id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Practitioner/prac-gregorio-casas",
+            "description": "Obtiene un médico por id."
+          }
+        }
+      ]
+    },
+    {
+      "name": "PractitionerRole",
+      "item": [
+        {
+          "name": "GET PractitionerRole por id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/PractitionerRole/pr-casas-pediatria-norte",
+            "description": "Rol del médico en la institución."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Patient",
+      "item": [
+        {
+          "name": "GET Patient por id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Patient/pat-ejemplo-001",
+            "description": "Obtiene un paciente."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Coverage",
+      "item": [
+        {
+          "name": "GET Coverage por id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Coverage/cov-001",
+            "description": "Cobertura del paciente (aseguradora)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Schedule",
+      "item": [
+        {
+          "name": "GET Schedule por id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Schedule/sched-pr-casas-2025-02",
+            "description": "Agenda mensual (por servicio o por médico)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slot",
+      "item": [
+        {
+          "name": "GET Slots libres",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Slot?status=free",
+            "description": "RF-06: consulta de disponibilidad (solo slots free)."
+          }
+        },
+        {
+          "name": "GET Slots por Schedule",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Slot?schedule=Schedule/sched-pr-casas-2025-02&status=free",
+            "description": "Slots libres de una agenda concreta."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Appointment",
+      "item": [
+        {
+          "name": "GET Appointment por id",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Appointment/appt-ejemplo",
+            "description": "Obtiene una cita."
+          }
+        },
+        {
+          "name": "GET Buscar Appointments",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Appointment?status=booked",
+            "description": "Citas activas (booked)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cargar recursos (PUT)",
+      "item": [
+        {
+          "name": "PUT Organization",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/fhir+json" },
+              { "key": "Content-Type", "value": "application/fhir+json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Organization\",\n  \"id\": \"org-acme-salud\",\n  \"identifier\": [{ \"system\": \"http://www.minsalud.gov.co/NIT\", \"value\": \"900123456-1\" }],\n  \"name\": \"ACME Salud\",\n  \"type\": [{ \"coding\": [{ \"system\": \"http://terminology.hl7.org/CodeSystem/organization-type\", \"code\": \"prov\", \"display\": \"Healthcare Provider\" }] }]\n}"
+            },
+            "url": "{{baseUrl}}/Organization/org-acme-salud",
+            "description": "Crea/actualiza la organización ACME Salud. Puedes pegar el JSON desde fhir_resources/Organization/org-acme-salud.json"
+          }
+        },
+        {
+          "name": "PUT Location (ejemplo Norte)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/fhir+json" },
+              { "key": "Content-Type", "value": "application/fhir+json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Location\",\n  \"id\": \"loc-norte\",\n  \"identifier\": [{ \"system\": \"http://www.minsalud.gov.co/sedes\", \"value\": \"1100155555-1\" }],\n  \"name\": \"Clínica Norte\",\n  \"status\": \"active\",\n  \"managingOrganization\": { \"reference\": \"Organization/org-acme-salud\" }\n}"
+            },
+            "url": "{{baseUrl}}/Location/loc-norte",
+            "description": "Crea/actualiza la sede Norte. Orden: primero Organization, luego Location."
+          }
+        }
+      ]
+    }
+  ]
+}

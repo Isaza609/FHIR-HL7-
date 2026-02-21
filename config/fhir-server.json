@@ -1,0 +1,23 @@
+{
+  "description": "Configuración del servidor FHIR central - ACME Salud",
+  "standard": "HL7 FHIR R4",
+  "baseUrl": "http://hapi.fhir.org/baseR4",
+  "endpoints": {
+    "metadata": "/metadata",
+    "resource": "/{resourceType}/{id}",
+    "search": "/{resourceType}?..."
+  },
+  "supportedResources": [
+    "Organization",
+    "Location",
+    "HealthcareService",
+    "Practitioner",
+    "PractitionerRole",
+    "Patient",
+    "Coverage",
+    "Schedule",
+    "Slot",
+    "Appointment",
+    "AppointmentResponse"
+  ]
+}
