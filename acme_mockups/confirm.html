@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Confirmación — ACME Salud</title><script src="https://cdn.tailwindcss.com"></script></head>
+<body class="bg-gray-50 text-gray-800">
+  <header class="flex items-center justify-between mb-6 p-4 bg-white shadow">
+  <div class="flex items-center gap-4">
+    <div class="bg-indigo-600 text-white rounded-md px-3 py-2 font-semibold">ACME Salud</div>
+    <nav class="flex gap-2 text-sm">
+      <a href="home.html" class="px-3 py-2 rounded hover:bg-indigo-50">Inicio</a>
+      <a href="search.html" class="px-3 py-2 rounded hover:bg-indigo-50">Solicitar cita</a>
+      <a href="calendar.html" class="px-3 py-2 rounded hover:bg-indigo-50">Calendario</a>
+      <a href="callcenter.html" class="px-3 py-2 rounded hover:bg-indigo-50">Call Center</a>
+      <a href="admin.html" class="px-3 py-2 rounded hover:bg-indigo-50">Admin</a>
+    </nav>
+  </div>
+  <div class="flex items-center gap-4">
+    <select id="channel" class="border rounded px-2 py-1 text-sm">
+      <option>Web</option><option>App</option><option>Call Center</option><option>Ventanilla HIS</option>
+    </select>
+    <a href="login.html" class="px-3 py-2 bg-white border rounded text-sm">Salir</a>
+  </div>
+</header>
+
+  <main class="max-w-3xl mx-auto p-6">
+    <div class="bg-white p-6 rounded shadow text-center">
+      <h1 class="text-xl font-semibold mb-2">Cita confirmada</h1>
+      <p class="text-gray-600 mb-4">Se ha enviado una confirmación al paciente.</p>
+      <div class="text-left bg-gray-50 p-4 rounded">
+        <p><strong>Fecha:</strong> 2026-03-05</p>
+        <p><strong>Hora:</strong> 09:00 - 09:30</p>
+        <p><strong>Servicio:</strong> Pediatría</p>
+        <p><strong>Médico:</strong> Gregorio Casas</p>
+      </div>
+      <div class="mt-4"><a href="home.html" class="px-3 py-2 bg-indigo-600 text-white rounded">Volver al inicio</a></div>
+    </div>
+  </main>
+</body></html>
