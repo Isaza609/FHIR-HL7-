@@ -36,10 +36,19 @@ El Appointment referencia **Slot/slot-pediatria-001** (08:00–08:30 del 2025-02
 
 ### Cómo cargar en el servidor
 
-El Appointment depende de Patient, PractitionerRole y Slot. Cargar después de ellos. Sustituir `BASE_URL` por la URL del servidor:
+El Appointment depende de Patient, PractitionerRole y Slot. Cargar después de ellos. Sustituir `BASE_URL` por la URL del servidor (ej. `http://hapi.fhir.org/baseR4`).
 
+**Bash / Linux (curl):**
 ```bash
 curl -X PUT "BASE_URL/Appointment/appt-ejemplo" -H "Content-Type: application/fhir+json" -d @fhir_resources/Appointment/appt-ejemplo.json
+```
+
+**PowerShell (Windows):** En PowerShell `curl` es un alias de `Invoke-WebRequest` y no acepta `-H` ni `-d`. Usar `Invoke-RestMethod`:
+
+```powershell
+$baseUrl = "http://hapi.fhir.org/baseR4"
+$body = Get-Content -Path "fhir_resources/Appointment/appt-ejemplo.json" -Raw
+Invoke-RestMethod -Uri "$baseUrl/Appointment/appt-ejemplo" -Method Put -Body $body -ContentType "application/fhir+json"
 ```
 
 El script `scripts/cargar_recursos.py` no incluye Appointment/AppointmentResponse por defecto (se crean en el flujo de agendamiento); cargarlos manualmente si se desea el ejemplo en el servidor.
@@ -61,13 +70,19 @@ Cuando se reserva un Slot mediante un Appointment, el recurso Slot debe actualiz
    GET BASE_URL/Slot/slot-pediatria-001
    ```
 2. Enviar el mismo recurso con `"status": "busy"`:
+
+   **Bash:** Editar localmente el JSON poniendo `"status":"busy"` y luego:
    ```bash
-   # Editar localmente el JSON poniendo "status":"busy" y luego:
    curl -X PUT "BASE_URL/Slot/slot-pediatria-001" -H "Content-Type: application/fhir+json" -d @fhir_resources/Slot/slot-pediatria-001.json
    ```
-   O con un JSON mínimo:
-   ```bash
-   curl -X PUT "BASE_URL/Slot/slot-pediatria-001" -H "Content-Type: application/fhir+json" -d "{\"resourceType\":\"Slot\",\"id\":\"slot-pediatria-001\",\"schedule\":{\"reference\":\"Schedule/sched-pr-casas-2025-02\"},\"status\":\"busy\",\"start\":\"2025-02-19T08:00:00-05:00\",\"end\":\"2025-02-19T08:30:00-05:00\"}"
+
+   **PowerShell:**
+   ```powershell
+   $baseUrl = "http://hapi.fhir.org/baseR4"
+   $body = Get-Content -Path "fhir_resources/Slot/slot-pediatria-001.json" -Raw
+   # Editar $body para que "status" sea "busy", o usar el JSON mínimo siguiente:
+   $body = '{"resourceType":"Slot","id":"slot-pediatria-001","schedule":{"reference":"Schedule/sched-pr-casas-2025-02"},"status":"busy","start":"2025-02-19T08:00:00-05:00","end":"2025-02-19T08:30:00-05:00"}'
+   Invoke-RestMethod -Uri "$baseUrl/Slot/slot-pediatria-001" -Method Put -Body $body -ContentType "application/fhir+json"
    ```
 
 **Flujo completo de agendamiento:** Crear Appointment → Actualizar Slot a busy → Crear AppointmentResponse.
@@ -98,8 +113,16 @@ Se añadió `meta.profile` según buenas prácticas FHIR R4.
 
 Cargar después del Appointment:
 
+**Bash:**
 ```bash
 curl -X PUT "BASE_URL/AppointmentResponse/apptresp-ejemplo" -H "Content-Type: application/fhir+json" -d @fhir_resources/AppointmentResponse/apptresp-ejemplo.json
+```
+
+**PowerShell:**
+```powershell
+$baseUrl = "http://hapi.fhir.org/baseR4"
+$body = Get-Content -Path "fhir_resources/AppointmentResponse/apptresp-ejemplo.json" -Raw
+Invoke-RestMethod -Uri "$baseUrl/AppointmentResponse/apptresp-ejemplo" -Method Put -Body $body -ContentType "application/fhir+json"
 ```
 
 ### Resumen del flujo RF-07
