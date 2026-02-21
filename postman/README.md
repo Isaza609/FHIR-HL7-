@@ -24,6 +24,16 @@ La colección incluye ejemplos de **PUT** (Organization y Location). Para el res
    - Body → raw → JSON: pega el contenido del archivo.
 3. Orden recomendado: Organization → Location → HealthcareService → Practitioner → PractitionerRole → Patient → Coverage → Schedule → Slot.
 
+## Filtros en servidor público
+
+El servidor **hapi.fhir.org** es compartido con otros proyectos. Para no traer datos ajenos:
+
+- Usa las peticiones **“(solo ACME)”** en cada carpeta (Organization, Location, Slot, Appointment, etc.).
+- **Slot:** no uses una consulta sin `schedule`; usa **GET Slots libres (solo nuestros)** o **GET Slots por un Schedule**.
+- **Appointment:** usa **GET Nuestras citas (solo ACME por sede)** en lugar de una búsqueda sin filtro.
+
+Los IDs de ACME están en `config/filtros-servidor-publico.json`.
+
 ## Nota sobre hapi.fhir.org
 
 El servidor público puede **resetear o borrar datos** periódicamente. Es adecuado para pruebas y para el curso; para datos persistentes haría falta un servidor propio (por ejemplo con Docker).

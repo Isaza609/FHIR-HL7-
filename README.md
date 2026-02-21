@@ -13,6 +13,8 @@ El proyecto usa el servidor público **HAPI FHIR** (R4), no es necesario levanta
 
 Las peticiones se hacen desde **Postman** (recomendado) o con los scripts de Python.
 
+**Importante:** al ser un servidor público, otros proyectos comparten el mismo endpoint. Hay que **filtrar siempre por nuestros recursos** para no traer datos ajenos. Ver sección [Filtros en servidor público](#filtros-en-servidor-público) y `config/filtros-servidor-publico.json`.
+
 ---
 
 ## Uso con Postman
@@ -36,7 +38,7 @@ La colección incluye peticiones para:
 - **Organization**, **Location**, **HealthcareService**, **Practitioner**, **PractitionerRole**
 - **Patient**, **Coverage**, **Schedule**, **Slot**, **Appointment**
 
-Por ejemplo: **Slot → GET Slots libres** (`{{baseUrl}}/Slot?status=free`) para ver disponibilidad (RF-06).
+Para **servidor público** usa las peticiones **“(solo ACME)”** de cada carpeta (filtran por nuestros IDs). Por ejemplo: **Slot → GET Slots libres (solo nuestros)** para disponibilidad (RF-06) sin traer slots de otros proyectos.
 
 ### 4. Cargar recursos (PUT)
 
@@ -64,11 +66,30 @@ pip install -r requirements.txt
 python scripts/cargar_recursos.py http://hapi.fhir.org/baseR4
 ```
 
-Consultar slots libres:
+Consultar slots libres (por defecto solo agendas ACME):
 
 ```bash
 python scripts/consulta_slots_libres.py http://hapi.fhir.org/baseR4
 ```
+
+O por un Schedule concreto: `--schedule sched-pr-casas-2025-02`. Ver `config/filtros-servidor-publico.json` para los IDs usados.
+
+---
+
+## Filtros en servidor público
+
+En **hapi.fhir.org** el servidor es compartido. Para no traer datos de otros proyectos:
+
+| Recurso | Filtro recomendado |
+|--------|----------------------|
+| Organization | `_id=org-acme-salud` o por nombre |
+| Location | `_id=loc-norte,loc-centro,loc-sur` |
+| HealthcareService | `location` de nuestras 3 sedes |
+| PractitionerRole | `organization=Organization/org-acme-salud` |
+| Schedule / Slot | Siempre filtrar por `schedule` (nuestros Schedule) |
+| Appointment | `location=Location/loc-norte` (y centro, sur) |
+
+La colección de Postman incluye peticiones **“(solo ACME)”** con estos filtros. Los IDs se centralizan en `config/filtros-servidor-publico.json`.
 
 ---
 
@@ -85,6 +106,7 @@ python scripts/consulta_slots_libres.py http://hapi.fhir.org/baseR4
 FHIR HL7/
 ├── config/                    # Configuración
 │   ├── fhir-server.json       # URL y recursos soportados
+│   ├── filtros-servidor-publico.json   # IDs ACME para filtrar en servidor público
 │   ├── duracion-citas.json    # Matriz tipo consulta + aseguradora → duración (RF-09)
 │   └── convencion-identificadores.md   # Prefijos e id únicos (RNF-05)
 ├── docs_plan/                 # Documentación del curso (contexto, requisitos, plan)

@@ -28,3 +28,7 @@ Todos los canales envían solicitudes al mismo servidor FHIR. No hay réplicas d
 4. **FHIR Server** → persiste Appointment, actualiza Slot a `busy`, devuelve `AppointmentResponse`
 
 Todos los canales consumen los mismos recursos; el modelo de datos no cambia por canal (RNF-06).
+
+## Filtros en servidor público
+
+Si se usa **hapi.fhir.org** (servidor compartido), las consultas deben filtrar por los recursos de ACME para no devolver datos de otros proyectos. Ver `config/filtros-servidor-publico.json` y la sección "Filtros en servidor público" del README principal.

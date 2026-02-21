@@ -47,6 +47,15 @@
             "url": "{{baseUrl}}/Organization?name=ACME",
             "description": "Busca organizaciones por nombre."
           }
+        },
+        {
+          "name": "GET Solo ACME (por id)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Organization?_id=org-acme-salud",
+            "description": "Solo nuestra organización en servidor público."
+          }
         }
       ]
     },
@@ -63,12 +72,12 @@
           }
         },
         {
-          "name": "GET Todas las Location",
+          "name": "GET Nuestras Location (solo ACME)",
           "request": {
             "method": "GET",
             "header": [{ "key": "Accept", "value": "application/fhir+json" }],
-            "url": "{{baseUrl}}/Location",
-            "description": "Lista todas las ubicaciones."
+            "url": "{{baseUrl}}/Location?_id=loc-norte,loc-centro,loc-sur",
+            "description": "Solo las 3 sedes de ACME. En servidor público filtrar por _id."
           }
         }
       ]
@@ -93,6 +102,15 @@
             "url": "{{baseUrl}}/HealthcareService?location=Location/loc-norte",
             "description": "Servicios de la sede Norte."
           }
+        },
+        {
+          "name": "GET Nuestros HealthcareService (solo ACME)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/HealthcareService?location=Location/loc-norte&location=Location/loc-centro&location=Location/loc-sur",
+            "description": "Solo servicios de nuestras 3 sedes."
+          }
         }
       ]
     },
@@ -106,6 +124,15 @@
             "header": [{ "key": "Accept", "value": "application/fhir+json" }],
             "url": "{{baseUrl}}/Practitioner/prac-gregorio-casas",
             "description": "Obtiene un médico por id."
+          }
+        },
+        {
+          "name": "GET Nuestros Practitioner (solo ACME)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Practitioner?_id=prac-gregorio-casas,prac-elmer-luna,prac-luis-manuel-chavez,prac-alvaro-silva,prac-diego-narvaez,prac-alonso-fonseca",
+            "description": "Solo los 6 médicos de ACME."
           }
         }
       ]
@@ -121,6 +148,15 @@
             "url": "{{baseUrl}}/PractitionerRole/pr-casas-pediatria-norte",
             "description": "Rol del médico en la institución."
           }
+        },
+        {
+          "name": "GET Nuestros PractitionerRole (solo ACME)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/PractitionerRole?organization=Organization/org-acme-salud",
+            "description": "Solo roles de ACME (filtro por organización)."
+          }
         }
       ]
     },
@@ -134,6 +170,15 @@
             "header": [{ "key": "Accept", "value": "application/fhir+json" }],
             "url": "{{baseUrl}}/Patient/pat-ejemplo-001",
             "description": "Obtiene un paciente."
+          }
+        },
+        {
+          "name": "GET Nuestros Patient (solo ACME)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Patient?_id=pat-ejemplo-001,pat-ejemplo-002",
+            "description": "Pacientes de ejemplo ACME."
           }
         }
       ]
@@ -149,6 +194,15 @@
             "url": "{{baseUrl}}/Coverage/cov-001",
             "description": "Cobertura del paciente (aseguradora)."
           }
+        },
+        {
+          "name": "GET Nuestros Coverage (solo ACME)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Coverage?_id=cov-001,cov-002",
+            "description": "Solo coberturas de ejemplo ACME."
+          }
         }
       ]
     },
@@ -163,6 +217,15 @@
             "url": "{{baseUrl}}/Schedule/sched-pr-casas-2025-02",
             "description": "Agenda mensual (por servicio o por médico)."
           }
+        },
+        {
+          "name": "GET Nuestros Schedule (solo ACME)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Schedule?_id=sched-hs-pediatria-2025-02,sched-pr-casas-2025-02",
+            "description": "Solo agendas ACME. Añadir más _id si creas más Schedules."
+          }
         }
       ]
     },
@@ -170,16 +233,16 @@
       "name": "Slot",
       "item": [
         {
-          "name": "GET Slots libres",
+          "name": "GET Slots libres (solo nuestros)",
           "request": {
             "method": "GET",
             "header": [{ "key": "Accept", "value": "application/fhir+json" }],
-            "url": "{{baseUrl}}/Slot?status=free",
-            "description": "RF-06: consulta de disponibilidad (solo slots free)."
+            "url": "{{baseUrl}}/Slot?schedule=Schedule/sched-hs-pediatria-2025-02&schedule=Schedule/sched-pr-casas-2025-02&status=free",
+            "description": "RF-06: slots libres solo de agendas ACME. En servidor público SIEMPRE filtrar por schedule."
           }
         },
         {
-          "name": "GET Slots por Schedule",
+          "name": "GET Slots por un Schedule",
           "request": {
             "method": "GET",
             "header": [{ "key": "Accept", "value": "application/fhir+json" }],
@@ -202,12 +265,21 @@
           }
         },
         {
-          "name": "GET Buscar Appointments",
+          "name": "GET Nuestras citas (solo ACME por sede)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/fhir+json" }],
+            "url": "{{baseUrl}}/Appointment?status=booked&location=Location/loc-norte&location=Location/loc-centro&location=Location/loc-sur",
+            "description": "Citas activas solo en nuestras 3 sedes. En servidor público usar este filtro."
+          }
+        },
+        {
+          "name": "GET Buscar Appointments (evitar en público)",
           "request": {
             "method": "GET",
             "header": [{ "key": "Accept", "value": "application/fhir+json" }],
             "url": "{{baseUrl}}/Appointment?status=booked",
-            "description": "Citas activas (booked)."
+            "description": "Sin filtro; en servidor público preferir 'Nuestras citas'."
           }
         }
       ]

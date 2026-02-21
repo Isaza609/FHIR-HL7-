@@ -1,0 +1,24 @@
+{
+  "description": "IDs de recursos ACME Salud para filtrar consultas en el servidor público (hapi.fhir.org). Usar estos filtros para no traer datos de otros proyectos.",
+  "organizationId": "org-acme-salud",
+  "locationIds": ["loc-norte", "loc-centro", "loc-sur"],
+  "healthcareServiceIds": [
+    "hs-medicina-general-norte", "hs-pediatria-norte", "hs-obstetricia-norte",
+    "hs-medicina-general-centro", "hs-nefrologia-centro", "hs-gastroenterologia-centro",
+    "hs-medicina-general-sur", "hs-oncologia-sur", "hs-cardiologia-sur"
+  ],
+  "practitionerIds": [
+    "prac-gregorio-casas", "prac-elmer-luna", "prac-luis-manuel-chavez",
+    "prac-alvaro-silva", "prac-diego-narvaez", "prac-alonso-fonseca"
+  ],
+  "practitionerRoleIds": [
+    "pr-casas-pediatria-norte", "pr-luna-obstetricia-norte", "pr-chavez-nefrologia-centro",
+    "pr-silva-gastro-centro", "pr-narvaez-oncologia-sur", "pr-fonseca-cardiologia-sur"
+  ],
+  "scheduleIds": ["sched-hs-pediatria-2025-02", "sched-pr-casas-2025-02"],
+  "scheduleIdPrefix": "sched-",
+  "slotIdPrefix": "slot-",
+  "appointmentIdPrefix": "appt-",
+  "patientIdPrefix": "pat-",
+  "coverageIdPrefix": "cov-"
+}
