@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { cancelAppointment } from "../services/appointment";
+import { USE_MOCK_DATA } from "../config";
 
 const MOTIVOS = [
   { value: "pat", label: "Paciente (solicitud del paciente)" },
@@ -25,6 +26,11 @@ export default function CancelarCita() {
     setSubmitting(true);
     setError(null);
     try {
+      if (USE_MOCK_DATA) {
+        navigate("/mis-citas", { state: { cancelled: appointmentId } });
+        setSubmitting(false);
+        return;
+      }
       const m = MOTIVOS.find((x) => x.value === motivo) || MOTIVOS[0];
       await cancelAppointment(appointmentId, m.value, m.label);
       navigate("/mis-citas", { state: { cancelled: appointmentId } });

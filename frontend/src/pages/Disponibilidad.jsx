@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { getSlotsFree, getScheduleIdsByHealthcareService, DEFAULT_SCHEDULE_IDS } from "../services/slot";
+import { USE_MOCK_DATA } from "../config";
+import { MOCK_SLOTS } from "../data/mockData";
 
 /** Formatea start/end del Slot para mostrar (fecha y hora legibles) */
 function formatSlotTime(start, end) {
@@ -29,6 +31,11 @@ export default function Disponibilidad() {
   useEffect(() => {
     setLoading(true);
     setError(null);
+    if (USE_MOCK_DATA) {
+      setSlots(MOCK_SLOTS);
+      setLoading(false);
+      return;
+    }
     const load = async () => {
       try {
         let scheduleIds = DEFAULT_SCHEDULE_IDS;
@@ -72,7 +79,7 @@ export default function Disponibilidad() {
         <Link to={`/servicios?location=${locationId || ""}`} className="back">← Volver a servicios</Link>
         <h2>Horarios disponibles</h2>
         {healthcareServiceId && <p className="info">Servicio: {healthcareServiceId}</p>}
-        {loading && <p>Cargando slots…</p>}
+        {loading && <p className="loading-msg">Cargando horarios…</p>}
         {error && <p className="error">Error: {error}</p>}
         {!loading && !error && (
           <ul className="lista-slot">

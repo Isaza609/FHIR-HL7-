@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { fhirGet } from "../services/fhir";
+import { USE_MOCK_DATA } from "../config";
+import { MOCK_LOCATIONS } from "../data/mockData";
 
 /** IDs de Location de ACME (sedes) – coinciden con config/filtros-servidor-publico.json */
 const LOCATION_IDS = ["loc-norte", "loc-centro", "loc-sur"];
@@ -18,7 +20,11 @@ export default function Inicio() {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    // GET Location para nuestras sedes (datos reales del servidor FHIR)
+    if (USE_MOCK_DATA) {
+      setSedes(MOCK_LOCATIONS);
+      setLoading(false);
+      return;
+    }
     const idParam = LOCATION_IDS.join(",");
     fhirGet(`Location?_id=${idParam}`)
       .then((bundle) => {
@@ -33,12 +39,15 @@ export default function Inicio() {
     <div className="inicio">
       <header className="header">
         <h1 className="logo">ACME Salud</h1>
-        <p className="tagline">Agendamiento de citas</p>
+        <p className="tagline">Agenda interoperable de citas</p>
+        <Link to="/operador" className="operador-link">Acceso operador (Call Center)</Link>
       </header>
       <main className="main">
-        <h2>Selecciona tu sede</h2>
-        <p className="intro">Elige el punto de atención donde deseas solicitar la cita.</p>
-        {loading && <p>Cargando sedes…</p>}
+        <section className="hero">
+          <h2>¿Dónde te atendemos?</h2>
+          <p className="intro">Elige la sede más cercana para agendar tu cita de forma rápida y segura.</p>
+        </section>
+        {loading && <p className="loading-msg">Cargando sedes…</p>}
         {error && <p className="error">Error al cargar sedes: {error}</p>}
         {!loading && !error && (
           <div className="sedes-grid">

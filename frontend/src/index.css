@@ -1,24 +1,66 @@
-/* Base: aspecto hospital / clínica – limpio, tranquilo, profesional */
+/* Sistema de diseño: agenda interoperable – hospitalario, moderno, acogedor */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
 :root {
-  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  line-height: 1.5;
+  font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
   font-weight: 400;
-  color: #1e293b;
-  background-color: #f0f9ff;
+  color: var(--color-text);
+  background-color: var(--color-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Paleta hospitalaria */
-  --hospital-primary: #0f766e;
-  --hospital-primary-hover: #0d9488;
-  --hospital-bg: #f0f9ff;
-  --hospital-card: #ffffff;
-  --hospital-border: #e2e8f0;
-  --hospital-text: #1e293b;
-  --hospital-text-muted: #64748b;
-  --hospital-accent: #0d9488;
+  /* Paleta morado suave – hospitalaria y moderna */
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+  --color-primary-light: #ede9fe;
+  --color-primary-dark: #5b21b6;
+  --color-bg: #faf5ff;
+  --color-bg-alt: #f5f3ff;
+  --color-card: #ffffff;
+  --color-card-hover: #f5f3ff;
+  --color-border: #c4b5fd;
+  --color-border-strong: #a78bfa;
+  --color-text: #1e1b4b;
+  --color-text-muted: #3730a3;
+  --color-text-soft: #8b5cf6;
+  --color-success: #059669;
+  --color-error: #dc2626;
+  --color-error-bg: #fef2f2;
+  --color-warning: #d97706;
+
+  /* Sombras suaves (morado) */
+  --shadow-sm: 0 1px 2px rgba(124, 58, 237, 0.06);
+  --shadow-md: 0 4px 12px rgba(124, 58, 237, 0.08);
+  --shadow-lg: 0 10px 40px rgba(124, 58, 237, 0.12);
+  --shadow-card: 0 2px 8px rgba(124, 58, 237, 0.06);
+
+  /* Radios */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Espaciado */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Compatibilidad con clases existentes */
+  --hospital-primary: var(--color-primary);
+  --hospital-primary-hover: var(--color-primary-hover);
+  --hospital-bg: var(--color-bg);
+  --hospital-card: var(--color-card);
+  --hospital-border: var(--color-border);
+  --hospital-text: var(--color-text);
+  --hospital-text-muted: var(--color-text-muted);
+  --hospital-accent: var(--color-primary);
 }
 
 * {
@@ -29,44 +71,64 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--hospital-bg);
+  background: var(--color-bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124, 58, 237, 0.1), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(139, 92, 246, 0.06), transparent);
 }
 
 a {
   font-weight: 500;
-  color: var(--hospital-primary);
+  color: var(--color-primary);
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 a:hover {
-  color: var(--hospital-primary-hover);
+  color: var(--color-primary-hover);
   text-decoration: underline;
 }
 
 h1, h2, h3 {
-  color: var(--hospital-text);
+  color: var(--color-text);
   font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  line-height: 1.2;
 }
 
 h2 {
   font-size: 1.35rem;
-  margin: 0 0 0.5rem;
+  margin: 0 0 var(--space-md);
+}
+
+h3 {
+  font-size: 1.1rem;
+  margin: 0 0 var(--space-sm);
 }
 
 button {
-  border-radius: 6px;
-  border: 1px solid var(--hospital-border);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
   padding: 0.5em 1em;
   font-size: 1rem;
   font-weight: 500;
   font-family: inherit;
-  background-color: var(--hospital-card);
-  color: var(--hospital-text);
+  background-color: var(--color-card);
+  color: var(--color-text);
   cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
+  transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
 button:hover {
-  background-color: #f1f5f9;
-  border-color: var(--hospital-primary);
+  background-color: var(--color-card-hover);
+  border-color: var(--color-primary);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }

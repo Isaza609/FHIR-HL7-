@@ -32,6 +32,11 @@ Abre la URL que muestre Vite (ej. http://localhost:5173).
 
 **Importante:** En desarrollo, las peticiones al servidor FHIR pasan por un **proxy** (Vite) para evitar errores de CORS en el navegador. La app llama a `http://localhost:5173/api/fhir/...` y Vite reenvía a `http://hapi.fhir.org/baseR4/...`. Si no ves datos, reinicia el servidor (`Ctrl+C` y luego `npm run dev` de nuevo).
 
+## Canales
+
+- **Sitio web / app:** rutas `/`, `/servicios`, `/disponibilidad`, etc. (flujo paciente).
+- **Call Center y ventanilla HIS:** ruta `/operador` (vista operador: disponibilidad, registro de cita, cancelación). La misma app se usa en ventanilla de información; el HIS puede enlazar o embeber la URL `/operador` como módulo de agendas.
+
 ## Stack
 
 - React 19 + Vite 6

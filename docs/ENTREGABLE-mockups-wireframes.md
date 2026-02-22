@@ -72,6 +72,10 @@ Las **capturas de pantalla** de la aplicación en funcionamiento pueden guardars
 
 Se desarrollan las interfaces en código **tarea por tarea**. Al terminar cada tarea se actualiza la evidencia en este documento (tablas del checklist y, si aplica, captura en `docs/mockups/`).
 
+### Datos estáticos (mock) para capturas sin servicio FHIR
+
+Para sacar capturas sin depender del servidor FHIR, el frontend puede usar **datos estáticos**. Por defecto está activado el modo mock (`VITE_USE_MOCK_DATA` no definido o `true`). Sedes, servicios, slots, pacientes y citas se cargan desde `frontend/src/data/mockData.js`; agendar y cancelar solo navegan sin llamar a la API. Para usar el servicio real, crear en `frontend/` un `.env` con `VITE_USE_MOCK_DATA=false` y reiniciar `npm run dev`.
+
 ### Fase 0 – Proyecto y configuración
 
 | # | Tarea | Qué hacer | Documentar al terminar | Estado |
@@ -97,14 +101,14 @@ Se desarrollan las interfaces en código **tarea por tarea**. Al terminar cada t
 
 | # | Tarea | Pantalla / checklist que cumple | Qué hacer | Documentar al terminar | Estado |
 |---|-------|----------------------------------|-----------|------------------------|--------|
-| 2.1 | Ruta o rol operador | — | Añadir ruta `/operador` (o rol "operador") que muestre vistas propias del Call Center. Layout distinto si se desea (mismo servicio FHIR). | Sin checklist; anotar en README o aquí. | Pendiente |
-| 2.2 | Operador: disponibilidad, registro, cancelación | Call Center #1, #2, #3 | Tres pantallas (o pestañas): (1) Consulta Slot por sede/servicio/profesional, (2) Registro de cita con datos del paciente y Slot elegido + confirmación, (3) Búsqueda de cita y cancelación con motivo. | Tabla "Canal: Call Center": las tres filas → Evidencia (ruta o componente) + Estado Cumplida. Opcional: capturas en `docs/mockups/call-center/`. | Pendiente |
+| 2.1 | Ruta o rol operador | — | Añadir ruta `/operador` (o rol "operador") que muestre vistas propias del Call Center. Layout distinto si se desea (mismo servicio FHIR). | Ruta `/operador` con layout `OperadorLayout.jsx`; pestañas Disponibilidad, Registrar cita, Cancelar cita. Redirección `/operador` → `/operador/disponibilidad`. | Cumplida |
+| 2.2 | Operador: disponibilidad, registro, cancelación | Call Center #1, #2, #3 | Tres pantallas (o pestañas): (1) Consulta Slot por sede/servicio/profesional, (2) Registro de cita con datos del paciente y Slot elegido + confirmación, (3) Búsqueda de cita y cancelación con motivo. | (1) `OperadorDisponibilidad.jsx`. (2) `OperadorAgendar.jsx` + `OperadorConfirmacion.jsx`. (3) `OperadorCancelar.jsx` + `OperadorCancelarCita.jsx`. Checklist Call Center #1, #2, #3 → Cumplida. | Cumplida |
 
 ### Fase 3 – HIS (Ventanilla)
 
 | # | Tarea | Pantalla / checklist que cumple | Qué hacer | Documentar al terminar | Estado |
 |---|-------|----------------------------------|-----------|------------------------|--------|
-| 3.1 | Uso en ventanilla HIS | HIS #1, #2, #3 | Opción A: Documentar que la misma app (o ruta `/operador`) se usa en ventanilla; Opción B: pantalla representativa de “módulo de agendas” que consuma FHIR (ej. iframe o enlace). | Tabla "Canal: HIS": marcar Evidencia (ej. "Misma app en ventanilla" + captura o ruta) y Estado Cumplida. | Pendiente |
+| 3.1 | Uso en ventanilla HIS | HIS #1, #2, #3 | Opción A: Documentar que la misma app (o ruta `/operador`) se usa en ventanilla; Opción B: pantalla representativa de “módulo de agendas” que consuma FHIR (ej. iframe o enlace). | **Opción A:** La misma app web se usa en ventanilla: el módulo de agendas es la ruta `/operador` (vista operador). El HIS puede embeder esta URL (iframe) o enlazarla como “Módulo de agendas”. Tabla "Canal: HIS" → Evidencia y Estado Cumplida. | Cumplida |
 
 ### Resumen del plan de trabajo
 
@@ -156,9 +160,9 @@ Marcar cuando exista **wireframe, mockup o implementación** correspondiente. Si
 
 | # | Pantalla / flujo | Descripción breve | Evidencia (mockup o implementación) | Estado |
 |---|------------------|-------------------|-------------------------------------|--------|
-| 1 | Consulta de disponibilidad | Vista del operador para buscar Slot por sede/servicio/profesional | | Pendiente |
-| 2 | Registro de cita | Formulario con datos del paciente y Slot elegido; confirmación (AppointmentResponse) | | Pendiente |
-| 3 | Cancelación de cita | Búsqueda de cita por paciente/fecha y cancelación con motivo | | Pendiente |
+| 1 | Consulta de disponibilidad | Vista del operador para buscar Slot por sede/servicio/profesional | `frontend/src/pages/operador/OperadorDisponibilidad.jsx` (ruta `/operador/disponibilidad`) | Cumplida |
+| 2 | Registro de cita | Formulario con datos del paciente y Slot elegido; confirmación (AppointmentResponse) | `OperadorAgendar.jsx` + `OperadorConfirmacion.jsx` (`/operador/agendar`, `/operador/agendar/confirmacion`) | Cumplida |
+| 3 | Cancelación de cita | Búsqueda de cita por paciente/fecha y cancelación con motivo | `OperadorCancelar.jsx` + `OperadorCancelarCita.jsx` (`/operador/cancelar`, `/operador/cancelar-cita`) | Cumplida |
 
 #### Canal: HIS (Ventanilla de información)
 
@@ -166,9 +170,9 @@ Marcar cuando exista **wireframe, mockup o implementación** correspondiente. Si
 
 | # | Pantalla / flujo | Descripción breve | Evidencia (mockup o implementación) | Estado |
 |---|------------------|-------------------|-------------------------------------|--------|
-| 1 | Módulo de agendas | Acceso al módulo de agendas dentro del HIS (ventanilla) | | Pendiente |
-| 2 | Disponibilidad y agendamiento | Consulta Slot y registro de cita (integrado al flujo del HIS) | | Pendiente |
-| 3 | Cancelación | Cancelación de cita desde el HIS con motivo si aplica | | Pendiente |
+| 1 | Módulo de agendas | Acceso al módulo de agendas dentro del HIS (ventanilla) | Misma app en ventanilla: ruta `/operador` (vista operador). El HIS enlaza o embebe esta URL como "Módulo de agendas". | Cumplida |
+| 2 | Disponibilidad y agendamiento | Consulta Slot y registro de cita (integrado al flujo del HIS) | `/operador/disponibilidad` y `/operador/agendar` + `/operador/agendar/confirmacion` (mismo código que Call Center). | Cumplida |
+| 3 | Cancelación | Cancelación de cita desde el HIS con motivo si aplica | `/operador/cancelar` y `/operador/cancelar-cita` (mismo código que Call Center). | Cumplida |
 
 *(El nivel de detalle puede ser “una pantalla representativa del módulo” si el equipo prioriza otros canales.)*
 

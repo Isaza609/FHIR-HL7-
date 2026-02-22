@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fhirGet } from "../services/fhir";
+import { USE_MOCK_DATA } from "../config";
+import { MOCK_PATIENTS, MOCK_APPOINTMENTS_BY_PATIENT } from "../data/mockData";
 
 export default function MisCitas() {
   const navigate = useNavigate();
@@ -12,6 +14,12 @@ export default function MisCitas() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (USE_MOCK_DATA) {
+      setPatients(MOCK_PATIENTS);
+      if (MOCK_PATIENTS.length > 0 && !patientId) setPatientId(MOCK_PATIENTS[0].id);
+      setLoading(false);
+      return;
+    }
     fhirGet("Patient?_count=50")
       .then((bundle) => {
         const list = bundle.entry?.map((e) => e.resource) || [];
@@ -25,6 +33,13 @@ export default function MisCitas() {
   useEffect(() => {
     if (!patientId) {
       setAppointments([]);
+      return;
+    }
+    if (USE_MOCK_DATA) {
+      setLoadingAppointments(true);
+      setError(null);
+      setAppointments(MOCK_APPOINTMENTS_BY_PATIENT[patientId] || []);
+      setLoadingAppointments(false);
       return;
     }
     setLoadingAppointments(true);
@@ -57,6 +72,7 @@ export default function MisCitas() {
       <main className="main">
         <Link to="/" className="back">← Volver al inicio</Link>
         <h2>Mis citas</h2>
+        <p className="intro">Consulta y gestiona tus citas agendadas.</p>
         <div className="form-group" style={{ maxWidth: "20rem", marginBottom: "1.5rem" }}>
           <label htmlFor="patient">Ver citas del paciente</label>
           <select id="patient" value={patientId} onChange={(e) => setPatientId(e.target.value)} disabled={loading}>
@@ -69,7 +85,7 @@ export default function MisCitas() {
           </select>
         </div>
         {error && <p className="error">{error}</p>}
-        {loadingAppointments && <p>Cargando citas…</p>}
+        {loadingAppointments && <p className="loading-msg">Cargando citas…</p>}
         {!loadingAppointments && patientId && (
           <ul className="lista-slot">
             {appointments.length === 0 ? (

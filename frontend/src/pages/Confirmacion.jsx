@@ -1,8 +1,18 @@
 import { Link, useLocation } from "react-router-dom";
+import { USE_MOCK_DATA } from "../config";
+
+const MOCK_STATE = {
+  slotStart: new Date(Date.now() + 86400000).toISOString().replace("Z", ""),
+  slotEnd: new Date(Date.now() + 86400000 + 30 * 60000).toISOString().replace("Z", ""),
+  patientId: "patient-1",
+  tipoConsulta: "Primera vez – Medicina general",
+  servicio: "Primera vez Medicina general",
+  appointmentId: "appt-mock-123",
+};
 
 export default function Confirmacion() {
   const location = useLocation();
-  const state = location.state || {};
+  const state = location.state || (USE_MOCK_DATA ? MOCK_STATE : {});
   const { slotStart, slotEnd, patientId, tipoConsulta, servicio, appointmentId } = state;
 
   return (
@@ -23,11 +33,10 @@ export default function Confirmacion() {
           {patientId && <li><strong>Paciente:</strong> {patientId}</li>}
           {appointmentId && <li><strong>N.º de cita:</strong> {appointmentId}</li>}
         </ul>
-        <p>
+        <div className="link-group">
           <Link to="/mis-citas">Ver mis citas</Link>
-          {" · "}
           <Link to="/">Volver al inicio</Link>
-        </p>
+        </div>
       </main>
     </div>
   );

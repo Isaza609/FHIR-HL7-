@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { fhirGet } from "../services/fhir";
-import { createAppointmentAndReserveSlot, getPractitionerRoleForSlot } from "../services/appointment";
-import { USE_MOCK_DATA } from "../config";
-import { MOCK_PATIENTS } from "../data/mockData";
+import { fhirGet } from "../../services/fhir";
+import { createAppointmentAndReserveSlot, getPractitionerRoleForSlot } from "../../services/appointment";
+import { USE_MOCK_DATA } from "../../config";
+import { MOCK_PATIENTS } from "../../data/mockData";
 
 const TIPOS_CONSULTA = [
   { value: "primera-vez-medicina-general", label: "Primera vez – Medicina general", code: "124", display: "Primera vez Medicina general" },
@@ -14,7 +14,7 @@ const TIPOS_CONSULTA = [
   { value: "control-telemedicina-especializada", label: "Control – Telemedicina (Consulta especializada)", code: "128", display: "Control Telemedicina especializada" },
 ];
 
-export default function DatosPaciente() {
+export default function OperadorAgendar() {
   const location = useLocation();
   const navigate = useNavigate();
   const state = location.state || {};
@@ -55,7 +55,7 @@ export default function DatosPaciente() {
     try {
       if (USE_MOCK_DATA) {
         const tipo = TIPOS_CONSULTA.find((t) => t.value === tipoConsulta) || TIPOS_CONSULTA[0];
-        navigate("/confirmacion", {
+        navigate("/operador/agendar/confirmacion", {
           state: {
             slotStart,
             slotEnd,
@@ -80,7 +80,7 @@ export default function DatosPaciente() {
         serviceTypeCode: tipo.code,
         serviceTypeDisplay: tipo.display,
       });
-      navigate("/confirmacion", {
+      navigate("/operador/agendar/confirmacion", {
         state: {
           slotStart,
           slotEnd,
@@ -99,58 +99,48 @@ export default function DatosPaciente() {
 
   if (!slotId || !slotResource) {
     return (
-      <div className="pagina">
-        <header className="header">
-          <Link to="/" className="logo">ACME Salud</Link>
-          <p className="tagline">Datos para la cita</p>
-        </header>
-        <main className="main">
-          <p>No se ha seleccionado un horario. <Link to="/">Volver al inicio</Link> y elige sede, servicio y un slot.</p>
-        </main>
-      </div>
+      <>
+        <h2>Registro de cita</h2>
+        <p>Debe elegir primero un horario en la pestaña <Link to="/operador/disponibilidad">Disponibilidad</Link>.</p>
+        <p className="back-block"><Link to="/operador/disponibilidad">Ir a disponibilidad</Link></p>
+      </>
     );
   }
 
   return (
-    <div className="pagina">
-      <header className="header">
-        <Link to="/" className="logo">ACME Salud</Link>
-        <p className="tagline">Datos para la cita</p>
-      </header>
-      <main className="main">
-        <Link to={`/disponibilidad?healthcareService=${healthcareServiceId || ""}&location=${locationId || ""}`} className="back">← Volver a horarios</Link>
-        <h2>Datos del paciente y tipo de consulta</h2>
-        <p className="info">Horario elegido: {slotStart} – {slotEnd}</p>
-        <form onSubmit={handleSubmit} className="form-cita">
-          <div className="form-group">
-            <label htmlFor="patient">Paciente</label>
-            {loading ? (
-              <p className="loading-msg">Cargando pacientes…</p>
-            ) : (
-              <select id="patient" value={patientId} onChange={(e) => setPatientId(e.target.value)} required>
-                <option value="">Seleccione un paciente</option>
-                {patients.map((p) => {
-                  const name = p.name?.[0];
-                  const text = name ? [name.given?.join(" "), name.family].filter(Boolean).join(" ") : p.id;
-                  return <option key={p.id} value={p.id}>{text || p.id}</option>;
-                })}
-              </select>
-            )}
-          </div>
-          <div className="form-group">
-            <label htmlFor="tipo">Tipo de consulta</label>
-            <select id="tipo" value={tipoConsulta} onChange={(e) => setTipoConsulta(e.target.value)} required>
-              {TIPOS_CONSULTA.map((t) => (
-                <option key={t.value} value={t.value}>{t.label}</option>
-              ))}
+    <>
+      <h2>Registro de cita</h2>
+      <p className="info">Horario elegido: {slotStart} – {slotEnd}</p>
+      <form onSubmit={handleSubmit} className="form-cita">
+        <div className="form-group">
+          <label htmlFor="patient">Paciente</label>
+          {loading ? (
+            <p>Cargando pacientes…</p>
+          ) : (
+            <select id="patient" value={patientId} onChange={(e) => setPatientId(e.target.value)} required>
+              <option value="">Seleccione un paciente</option>
+              {patients.map((p) => {
+                const name = p.name?.[0];
+                const text = name ? [name.given?.join(" "), name.family].filter(Boolean).join(" ") : p.id;
+                return <option key={p.id} value={p.id}>{text || p.id}</option>;
+              })}
             </select>
-          </div>
-          {error && <p className="error">{error}</p>}
-          <button type="submit" className="btn-submit" disabled={submitting || loading}>
-            {submitting ? "Agendando…" : "Confirmar y agendar cita"}
-          </button>
-        </form>
-      </main>
-    </div>
+          )}
+        </div>
+        <div className="form-group">
+          <label htmlFor="tipo">Tipo de consulta</label>
+          <select id="tipo" value={tipoConsulta} onChange={(e) => setTipoConsulta(e.target.value)} required>
+            {TIPOS_CONSULTA.map((t) => (
+              <option key={t.value} value={t.value}>{t.label}</option>
+            ))}
+          </select>
+        </div>
+        {error && <p className="error">{error}</p>}
+        <button type="submit" className="btn-submit" disabled={submitting || loading}>
+          {submitting ? "Agendando…" : "Confirmar y agendar cita"}
+        </button>
+      </form>
+      <p className="back-block"><Link to="/operador/disponibilidad">← Volver a disponibilidad</Link></p>
+    </>
   );
 }

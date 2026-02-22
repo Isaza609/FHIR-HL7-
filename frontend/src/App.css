@@ -1,119 +1,194 @@
-/* Layout común – estilo hospital / clínica */
+/* ========== Layout común – páginas paciente ========== */
 .pagina,
 .inicio {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--hospital-bg);
+  background: var(--color-bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124, 58, 237, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(139, 92, 246, 0.06), transparent);
 }
 
-/* Cabecera institucional */
+/* ========== Cabecera institucional ========== */
 .header {
-  padding: 1rem 1.5rem;
-  background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);
+  padding: var(--space-lg) var(--space-xl);
+  background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 50%, #8b5cf6 100%);
   color: #fff;
-  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.2);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .header .logo {
   color: #fff;
-  font-size: 1.35rem;
+  font-size: 1.5rem;
   font-weight: 700;
   text-decoration: none;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.02em;
+  position: relative;
+  display: inline-block;
 }
 
 .header .logo:hover {
-  color: #e0f2f1;
+  color: #f0fdfa;
   text-decoration: none;
 }
 
 .tagline {
-  margin: 0.2rem 0 0;
-  font-size: 0.8rem;
+  margin: var(--space-xs) 0 0;
+  font-size: 0.9rem;
   opacity: 0.95;
   font-weight: 400;
+  position: relative;
 }
 
+.operador-link {
+  display: inline-flex;
+  align-items: center;
+  margin-top: var(--space-md);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.15);
+  transition: background 0.2s, color 0.2s;
+}
+
+.operador-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.25);
+  text-decoration: none;
+}
+
+/* ========== Contenido principal ========== */
 .main {
   flex: 1;
-  max-width: 52rem;
+  max-width: 56rem;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: var(--space-2xl) var(--space-lg);
   width: 100%;
   text-align: left;
+  position: relative;
 }
 
 .back {
-  display: inline-block;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
-  color: var(--hospital-primary);
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: var(--space-lg);
+  font-size: 0.9rem;
+  color: var(--color-primary);
+  font-weight: 500;
 }
 
-/* Inicio – tarjetas de sedes (estilo consultorio / puntos de atención) */
+.back:hover {
+  color: var(--color-primary-hover);
+}
+
+/* ========== Inicio – Hero y tarjetas de sedes ========== */
+.hero {
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+  padding: var(--space-xl) 0;
+}
+
+.hero h2 {
+  font-size: clamp(1.5rem, 4vw, 1.85rem);
+  margin-bottom: var(--space-sm);
+  color: var(--color-text);
+}
+
+.hero .intro {
+  font-size: 1.05rem;
+  color: var(--color-text-muted);
+  max-width: 32rem;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
 .sedes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
-  gap: 1.25rem;
-  margin-top: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-lg);
 }
 
 .sede-card {
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
-  border: 1px solid var(--hospital-border);
-  border-radius: 8px;
-  border-left: 4px solid var(--hospital-primary);
-  background: var(--hospital-card);
+  padding: var(--space-xl);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--color-primary);
+  background: var(--color-card);
   color: inherit;
   text-decoration: none;
-  transition: box-shadow 0.2s, border-left-color 0.2s;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
+  box-shadow: var(--shadow-card);
 }
 
 .sede-card:hover {
-  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.12);
-  border-left-color: var(--hospital-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-left-color: var(--color-primary-hover);
   text-decoration: none;
   color: inherit;
 }
 
 .sede-name {
   font-weight: 600;
-  color: var(--hospital-text);
-  font-size: 1.05rem;
+  color: var(--color-text);
+  font-size: 1.1rem;
 }
 
 .sede-id {
   font-size: 0.8rem;
-  color: var(--hospital-text-muted);
-  margin-top: 0.35rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-xs);
 }
 
 .intro {
-  color: var(--hospital-text-muted);
-  margin-top: 0.5rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-sm);
   font-size: 0.95rem;
 }
 
-/* Listas – servicios y slots (estilo listado clínico) */
+/* ========== Listas – servicios y slots ========== */
 .lista-servicios,
 .lista-slot {
   list-style: none;
   padding: 0;
-  margin: 1rem 0 0;
-  border: 1px solid var(--hospital-border);
-  border-radius: 8px;
-  background: var(--hospital-card);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin: var(--space-lg) 0 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
 }
 
 .lista-servicios li,
 .lista-slot li {
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--hospital-border);
+  padding: var(--space-lg) var(--space-xl);
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.15s ease;
+}
+
+.lista-servicios li:hover,
+.lista-slot li:hover {
+  background: var(--color-card-hover);
 }
 
 .lista-servicios li:last-child,
@@ -123,17 +198,19 @@
 
 .servicio-link {
   font-weight: 500;
-  color: var(--hospital-primary);
+  color: var(--color-primary);
+  display: inline-flex;
+  align-items: center;
 }
 
 .servicio-link:hover {
-  color: var(--hospital-primary-hover);
+  color: var(--color-primary-hover);
 }
 
 .slot-id {
   font-size: 0.8rem;
-  color: var(--hospital-text-muted);
-  margin-left: 0.5rem;
+  color: var(--color-text-muted);
+  margin-left: var(--space-sm);
 }
 
 .slot-row {
@@ -141,7 +218,7 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: var(--space-md);
 }
 
 .slot-info {
@@ -150,57 +227,67 @@
 }
 
 .slot-date {
-  font-weight: 500;
-  color: var(--hospital-text);
+  font-weight: 600;
+  color: var(--color-text);
 }
 
 .slot-time {
   display: block;
   font-size: 0.9rem;
-  color: var(--hospital-text-muted);
+  color: var(--color-text-muted);
+  margin-top: var(--space-xs);
 }
 
+/* ========== Botones ========== */
 .btn-elegir {
-  background: var(--hospital-primary);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #8b5cf6 100%);
   color: #fff;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-weight: 500;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  font-weight: 600;
   cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .btn-elegir:hover {
-  background: var(--hospital-primary-hover);
+  background: linear-gradient(135deg, var(--color-primary-hover) 0%, var(--color-primary) 100%);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .btn-cancelar {
   background: transparent;
-  color: #b91c1c;
-  border: 1px solid #b91c1c;
-  padding: 0.4rem 0.75rem;
-  border-radius: 6px;
+  color: var(--color-error);
+  border: 1px solid var(--color-error);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
   font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
+  transition: background 0.2s, color 0.2s;
 }
 
 .btn-cancelar:hover {
-  background: #fef2f2;
+  background: var(--color-error-bg);
 }
 
 .btn-cancelar-submit {
-  margin-top: 0.5rem;
-  background: #b91c1c;
+  margin-top: var(--space-sm);
+  background: var(--color-error);
   color: #fff;
   border: none;
-  padding: 0.6rem 1.25rem;
-  border-radius: 6px;
-  font-weight: 500;
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-md);
+  font-weight: 600;
   cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
 }
 
 .btn-cancelar-submit:hover:not(:disabled) {
-  background: #991b1b;
+  opacity: 0.95;
+  transform: translateY(-1px);
 }
 
 .btn-cancelar-submit:disabled {
@@ -208,85 +295,226 @@
   cursor: not-allowed;
 }
 
-/* Formulario datos paciente */
+/* ========== Formularios ========== */
 .form-cita {
-  margin-top: 1.5rem;
+  margin-top: var(--space-xl);
   max-width: 28rem;
 }
 
 .form-group {
-  margin-bottom: 1.25rem;
+  margin-bottom: var(--space-lg);
 }
 
 .form-group label {
   display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--hospital-text);
-  margin-bottom: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
 }
 
 .form-group select,
 .form-group input {
   width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid var(--hospital-border);
-  border-radius: 6px;
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-family: inherit;
+  background: var(--color-card);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
 }
 
 .btn-submit {
-  margin-top: 0.5rem;
-  background: var(--hospital-primary);
+  margin-top: var(--space-md);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #8b5cf6 100%);
   color: #fff;
   border: none;
-  padding: 0.6rem 1.25rem;
-  border-radius: 6px;
-  font-weight: 500;
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-md);
+  font-weight: 600;
   cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 .btn-submit:hover:not(:disabled) {
-  background: var(--hospital-primary-hover);
+  background: linear-gradient(135deg, var(--color-primary-hover) 0%, var(--color-primary) 100%);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 .btn-submit:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+  transform: none;
 }
 
+/* ========== Confirmación ========== */
 .confirmacion-ok {
-  color: var(--hospital-primary);
-  font-weight: 500;
-  margin-bottom: 1rem;
+  color: var(--color-success);
+  font-weight: 600;
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-primary-light);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--color-success);
 }
 
 .confirmacion-detalle {
   list-style: none;
   padding: 0;
-  margin: 1rem 0;
+  margin: var(--space-lg) 0;
+  background: var(--color-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
 }
 
 .confirmacion-detalle li {
-  padding: 0.35rem 0;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.confirmacion-detalle li:last-child {
   border-bottom: none;
 }
 
+/* ========== Mensajes ========== */
 .error {
-  color: #b91c1c;
-  background: #fef2f2;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  border-left: 4px solid #b91c1c;
+  color: var(--color-error);
+  background: var(--color-error-bg);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--color-error);
+  margin: var(--space-md) 0;
 }
 
 .info {
-  color: var(--hospital-text-muted);
-  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: var(--space-md);
 }
 
-/* Mensaje de carga */
 .main > p {
-  color: var(--hospital-text-muted);
+  color: var(--color-text-muted);
+}
+
+/* ========== Bloque de enlaces (confirmación, etc.) ========== */
+.main .link-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+}
+
+.main .link-group a {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--color-primary-light);
+  color: var(--color-primary-hover);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+}
+
+.main .link-group a:hover {
+  background: var(--color-primary);
+  color: #fff;
+  text-decoration: none;
+}
+
+/* ========== Vista operador (Call Center) ========== */
+.operador .header {
+  padding-bottom: var(--space-md);
+}
+
+.operador-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm) var(--space-lg);
+}
+
+.operador-tabs {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: var(--space-md);
+  margin-left: 0;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+}
+
+.operador-tabs .tab {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+
+.operador-tabs .tab:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  text-decoration: none;
+}
+
+.operador-tabs .tab.active {
+  background: #fff;
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.operador-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg) var(--space-2xl);
+  margin-bottom: var(--space-xl);
+}
+
+.operador-filtros .form-group {
+  margin-bottom: 0;
+}
+
+.back-block {
+  margin-top: var(--space-xl);
+  font-size: 0.9rem;
+}
+
+.back-block a {
+  color: var(--color-primary);
+}
+
+/* ========== Loading state ========== */
+.loading-msg {
+  color: var(--color-text-muted);
+  padding: var(--space-lg);
+  text-align: center;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 640px) {
+  .header {
+    padding: var(--space-md) var(--space-lg);
+  }
+  .main {
+    padding: var(--space-lg) var(--space-md);
+  }
+  .sedes-grid {
+    grid-template-columns: 1fr;
+  }
+  .slot-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
