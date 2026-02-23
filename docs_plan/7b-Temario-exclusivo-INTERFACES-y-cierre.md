@@ -4,6 +4,10 @@
 
 **Duración total de tu bloque:** ~10 min (~4 min interfaces + ~3 min cierre; el resto para transición y margen).
 
+**Nota sobre la interfaz actual:** Las pantallas muestran etiquetas **Req. 1** a **Req. 7** que enlazan con el documento de contexto (§3 Requerimientos). Puedes decir exactamente lo de "Qué decir" en cada vista; si quieres apoyarte en lo que se ve, puedes añadir la frase opcional que se indica. La cabecera del operador dice "Call Center – Agenda interoperable" (el logo sigue siendo ACME Salud).
+
+**Cómo mencionar los requerimientos:** En cada vista hay un bloque *"Para mencionar (de forma natural)"* con frases para enlazar lo que se ve en pantalla con lo que pide el documento de contexto. Úsalas con naturalidad al explicar la pantalla, sin decir de forma literal "esto cumple el requisito tal".
+
 ---
 
 ## 1. Qué te toca sustentar (en una frase)
@@ -31,6 +35,7 @@
 - **Qué mostrar:** pantalla con las 3 sedes (Clínica Norte, Centro, Sur).
 - **Qué decir:** *“El paciente entra por aquí y elige la sede. Detrás se hace un GET a Location con los IDs de nuestras sedes; es el punto de partida del flujo y cumple con el checklist de inicio del sitio web y de la app.”*
 - **Relación FHIR:** `GET Location?_id=...` (sedes ACME).
+- **Para mencionar (de forma natural):** *"Todas las solicitudes de citas de los distintos canales —web, Call Center, app, ventanilla— van al mismo servidor FHIR, así el control de las agendas queda centralizado."*
 - **Requisito / checklist:** Web #1, App #1 (Inicio / selección de sede).
 
 ---
@@ -40,6 +45,7 @@
 - **Qué mostrar:** listado de servicios de la sede elegida (ej. Medicina general, Pediatría, Obstetricia en Norte).
 - **Qué decir:** *“Según la sede elegida, se consultan los servicios con GET HealthcareService por Location. El usuario elige servicio y pasa a ver la disponibilidad.”*
 - **Relación FHIR:** `GET HealthcareService?location=Location/{id}`.
+- **Para mencionar (de forma natural):** *"Cada uno de estos servicios tiene su propia agenda definida mensualmente; lo mismo ocurre con los médicos en su rol dentro de la institución. Al elegir servicio, la disponibilidad que veremos después sale de esas agendas."*
 - **Requisito:** Web #2 (Selección de servicio o profesional).
 
 ---
@@ -49,24 +55,27 @@
 - **Qué mostrar:** lista de horarios (fecha y hora de cada slot) y botón “Elegir”.
 - **Qué decir:** *“Aquí se muestran los Slot libres, que son los mismos que Andrea consultó en Postman: GET Slot con status=free y el Schedule del servicio. Al hacer clic en ‘Elegir’ se guarda ese slot para el siguiente paso. Esto es el RF-06 – consulta de disponibilidad.”*
 - **Relación FHIR:** `GET Slot?status=free&schedule=Schedule/...` (o por HealthcareService).
+- **Para mencionar (de forma natural):** *"Cada fila es un espacio de tiempo dentro de la agenda del servicio o del profesional. Cuando el paciente elige uno, ese es el slot que luego se registrará en la cita."*
 - **Requisito:** Web #3, App #2 (Consulta de disponibilidad).
 
 ---
 
 ### 3.4 Datos del paciente y tipo de consulta (`/datos-paciente`)
 
-- **Qué mostrar:** formulario con selector de paciente y tipo de consulta (primera vez, control, telemedicina, etc.).
+- **Qué mostrar:** formulario con selector de paciente y tipo de consulta (primera vez, control, telemedicina, etc.). En pantalla aparece la cobertura del paciente (aseguradora) cuando tiene Coverage asociado.
 - **Qué decir:** *“El usuario identifica al paciente —en producción vendría de login o búsqueda— y el tipo de consulta. Al enviar, la app crea el Appointment en el servidor FHIR, pone el Slot en busy y genera el AppointmentResponse. Es el flujo que Andrea mostró: POST Appointment y PUT Slot.”*
 - **Relación FHIR:** `GET Patient` (listado); al enviar: `PUT Appointment`, `PUT Slot` (status=busy), `PUT AppointmentResponse`.
+- **Para mencionar (de forma natural):** *"Aquí se ve la relación del paciente con su cobertura y la aseguradora: esa información es la que en el modelo permite determinar los tiempos de consulta según la aseguradora. Al confirmar, se registra el slot elegido dentro de la agenda y se genera la respuesta de cita."*
 - **Requisito:** Web #4 (Datos paciente / tipo consulta), RF-07 (Agendamiento).
 
 ---
 
 ### 3.5 Confirmación (`/confirmacion`)
 
-- **Qué mostrar:** resumen con hora inicio/fin, servicio, tipo de consulta, médico (asignado según agenda), paciente y número de cita.
+- **Qué mostrar:** resumen con hora inicio/fin, servicio, tipo de consulta, médico (asignado según agenda o nombre del Practitioner), paciente y número de cita. En pantalla aparece además el bloque "Contenido del AppointmentResponse (Req. 6)" y el detalle técnico FHIR. **Opcional al hablar:** *"Como ven, aquí se muestra lo que define el estándar: hora inicio/fin, servicio, médico tratante y comentarios."*
 - **Qué decir:** *“Esta pantalla es el equivalente al AppointmentResponse: mismo modelo FHIR, mostrado al usuario. Incluye enlace a ‘Ver mis citas’ para consultar o cancelar.”*
 - **Relación FHIR:** AppointmentResponse (inicio, fin, servicio, participante).
+- **Para mencionar (de forma natural):** *"Lo que ve el usuario aquí es exactamente lo que el estándar define para la respuesta al agendar: hora de inicio y fin, servicio de salud, médico tratante y comentarios. Así el paciente queda informado de su cita de forma clara."*
 - **Requisito:** Web #5, App #3 (Confirmación de cita).
 
 ---
@@ -76,6 +85,7 @@
 - **Qué mostrar:** selector de paciente y listado de citas con botón “Cancelar cita”.
 - **Qué decir:** *“Se consultan las citas del paciente con GET Appointment por actor (Patient). Desde aquí se puede ir a cancelar una cita.”*
 - **Relación FHIR:** `GET Appointment?actor=Patient/{id}`.
+- **Para mencionar (de forma natural):** *"Para cada paciente se ve también su cobertura y aseguradora, y en cada cita el profesional con el que quedó agendada. Si el usuario quiere cancelar, desde aquí accede al flujo de cancelación con motivo."*
 - **Requisito:** Web #6, App #4 (Mis citas / listado).
 
 ---
@@ -85,6 +95,7 @@
 - **Qué mostrar:** formulario con motivo de cancelación (paciente, prestador, enfermedad, mudanza, etc.) y botón “Confirmar cancelación”.
 - **Qué decir:** *“Al confirmar, se hace PUT del Appointment con status=cancelled y cancelationReason, y PUT del Slot a free. Es el RF-08 – cancelación con motivo.”*
 - **Relación FHIR:** `PUT Appointment` (status=cancelled, cancelationReason), `PUT Slot` (status=free).
+- **Para mencionar (de forma natural):** *"Cuando el paciente cancela, el sistema no solo cambia el estado de la cita a cancelada: también guarda el motivo. Así queda trazabilidad y el slot vuelve a quedar disponible en la agenda."*
 - **Requisito:** Web #7, App #4 (Cancelación de cita), RF-08.
 
 ---
@@ -93,6 +104,7 @@
 
 - **Qué mostrar:** cabecera “ACME Salud – Call Center” y las 3 pestañas: **Disponibilidad**, **Registrar cita**, **Cancelar cita**.
 - **Qué decir:** *“Para Call Center usamos la misma app con la ruta /operador. El operador tiene tres pantallas: consulta de disponibilidad por sede y servicio, registro de cita con datos del paciente y slot elegido, y búsqueda de cita por paciente para cancelar con motivo. Mismo servidor FHIR, mismo modelo; solo cambia la interfaz orientada al operador.”*
+- **Para mencionar (de forma natural):** *"El operador usa exactamente el mismo modelo de datos: sedes, servicios, agendas, slots, paciente con su cobertura, y al agendar o cancelar se actualizan el Appointment y el Slot en el servidor central. Así todos los canales comparten la misma fuente de verdad."*
 - **Relación FHIR:** Igual que el flujo paciente (Slot, Appointment, AppointmentResponse, cancelación); solo cambia el rol (operador agenda por el paciente).
 - **Requisito:** Call Center #1, #2, #3 (consulta, registro, cancelación).
 

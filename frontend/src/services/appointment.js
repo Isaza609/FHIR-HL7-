@@ -84,6 +84,28 @@ export async function createAppointmentAndReserveSlot({
 }
 
 /**
+ * Obtiene el nombre para mostrar del Practitioner asociado a un PractitionerRole.
+ * @param {string} practitionerRoleRef - Referencia "PractitionerRole/id"
+ * @returns {Promise<string>} Nombre del profesional (ej. "Diego Narváez") o "" si falla
+ */
+export async function getPractitionerDisplayName(practitionerRoleRef) {
+  if (!practitionerRoleRef) return "";
+  try {
+    const role = await getPractitionerRole(practitionerRoleRef);
+    const practitionerRef = role?.practitioner?.reference;
+    if (!practitionerRef) return "";
+    const practitionerId = practitionerRef.replace("Practitioner/", "");
+    const practitioner = await fhirGet(`Practitioner/${practitionerId}`);
+    const name = practitioner?.name?.[0];
+    if (!name) return "";
+    const parts = [...(name.given || []), name.family].filter(Boolean);
+    return parts.join(" ") || "";
+  } catch {
+    return "";
+  }
+}
+
+/**
  * Obtiene el PractitionerRole a usar para un Appointment a partir del Schedule del Slot.
  * Si Schedule.actor es PractitionerRole, lo devuelve; si es HealthcareService, busca un PractitionerRole con ese servicio.
  */
@@ -102,6 +124,17 @@ export async function getPractitionerRoleForSlot(slotResource) {
     return `PractitionerRole/${first.id}`;
   }
   throw new Error("Actor no soportado");
+}
+
+/**
+ * Extrae la referencia PractitionerRole del Appointment (desde participant).
+ * @param {object} appointment - Recurso Appointment
+ * @returns {string|null} "PractitionerRole/id" o null
+ */
+export function getPractitionerRoleRefFromAppointment(appointment) {
+  const participants = appointment?.participant || [];
+  const pr = participants.find((p) => (p.actor?.reference || "").startsWith("PractitionerRole/"));
+  return pr?.actor?.reference || null;
 }
 
 /**

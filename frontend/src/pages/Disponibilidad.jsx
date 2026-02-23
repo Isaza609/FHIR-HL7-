@@ -3,21 +3,11 @@ import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { getSlotsFree, getScheduleIdsByHealthcareService, DEFAULT_SCHEDULE_IDS } from "../services/slot";
 import { USE_MOCK_DATA } from "../config";
 import { MOCK_SLOTS } from "../data/mockData";
-
-/** Formatea start/end del Slot para mostrar (fecha y hora legibles) */
-function formatSlotTime(start, end) {
-  if (!start || !end) return { date: "", time: "" };
-  try {
-    const d = new Date(start);
-    const dateStr = d.toLocaleDateString("es-CO", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
-    const startStr = d.toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" });
-    const endDate = new Date(end);
-    const endStr = endDate.toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" });
-    return { date: dateStr, time: `${startStr} – ${endStr}` };
-  } catch {
-    return { date: start, time: end };
-  }
-}
+import PageLayout from "../components/PageLayout";
+import SlotList from "../components/SlotList";
+import LoadingSpinner from "../components/LoadingSpinner";
+import { Icon } from "../components/Icons";
+import ReqNote from "../components/ReqNote";
 
 export default function Disponibilidad() {
   const [searchParams] = useSearchParams();
@@ -70,41 +60,26 @@ export default function Disponibilidad() {
   };
 
   return (
-    <div className="pagina">
-      <header className="header">
-        <Link to="/" className="logo">ACME Salud</Link>
-        <p className="tagline">Disponibilidad</p>
-      </header>
-      <main className="main">
-        <Link to={`/servicios?location=${locationId || ""}`} className="back">← Volver a servicios</Link>
-        <h2>Horarios disponibles</h2>
-        {healthcareServiceId && <p className="info">Servicio: {healthcareServiceId}</p>}
-        {loading && <p className="loading-msg">Cargando horarios…</p>}
+    <PageLayout
+      tagline="Disponibilidad"
+      backTo={`/servicios?location=${locationId || ""}`}
+      backLabel="Volver a servicios"
+    >
+      <h2><Icon name="calendar" /> Horarios disponibles</h2>
+      <ReqNote num={4}>Cuando el paciente solicita una cita (Appointment) se registra un espacio de tiempo (Slot) dentro de la agenda (Schedule) correspondiente.</ReqNote>
+      {healthcareServiceId && <p className="info">Servicio: {healthcareServiceId}</p>}
+      <div role="status" aria-live="polite" aria-atomic="true">
+        {loading && (
+          <p className="loading-block">
+            <LoadingSpinner aria-label="Cargando disponibilidad" />
+            Cargando disponibilidad…
+          </p>
+        )}
         {error && <p className="error">Error: {error}</p>}
         {!loading && !error && (
-          <ul className="lista-slot">
-            {slots.length === 0 ? (
-              <li>No hay slots libres en este momento.</li>
-            ) : (
-              slots.map((slot) => {
-                const { date, time } = formatSlotTime(slot.start, slot.end);
-                return (
-                  <li key={slot.id} className="slot-row">
-                    <div className="slot-info">
-                      <span className="slot-date">{date}</span>
-                      <span className="slot-time">{time}</span>
-                      <span className="slot-id">({slot.id})</span>
-                    </div>
-                    <button type="button" className="btn-elegir" onClick={() => handleElegir(slot)}>
-                      Elegir
-                    </button>
-                  </li>
-                );
-              })
-            )}
-          </ul>
+          <SlotList slots={slots} onChoose={handleElegir} buttonLabel="Elegir" />
         )}
-      </main>
-    </div>
+      </div>
+    </PageLayout>
   );
 }

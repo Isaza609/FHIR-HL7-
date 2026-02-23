@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { cancelAppointment } from "../../services/appointment";
 import { USE_MOCK_DATA } from "../../config";
+import ReqNote from "../../components/ReqNote";
 
 const MOTIVOS = [
   { value: "pat", label: "Paciente (solicitud del paciente)" },
@@ -27,13 +28,14 @@ export default function OperadorCancelarCita() {
     setError(null);
     try {
       if (USE_MOCK_DATA) {
-        navigate("/operador/cancelar", { state: { cancelled: appointmentId } });
+        const m = MOTIVOS.find((x) => x.value === motivo) || MOTIVOS[0];
+        navigate("/operador/cancelar", { state: { cancelled: appointmentId, cancellationReason: m.value, cancellationReasonDisplay: m.label } });
         setSubmitting(false);
         return;
       }
       const m = MOTIVOS.find((x) => x.value === motivo) || MOTIVOS[0];
       await cancelAppointment(appointmentId, m.value, m.label);
-      navigate("/operador/cancelar", { state: { cancelled: appointmentId } });
+      navigate("/operador/cancelar", { state: { cancelled: appointmentId, cancellationReason: m.value, cancellationReasonDisplay: m.label } });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -55,10 +57,11 @@ export default function OperadorCancelarCita() {
   return (
     <>
       <h2>Confirmar cancelación</h2>
-      <p className="info">Cita: {appointmentId} · {formatDate(appointment?.start)} – {formatDate(appointment?.end)}</p>
+      <ReqNote num={7}>Al cancelar: se actualiza Appointment.status = cancelled y Appointment.cancellationReason.</ReqNote>
+      <p className="info">Cita (Appointment): {appointmentId} · {formatDate(appointment?.start)} – {formatDate(appointment?.end)}</p>
       <form onSubmit={handleSubmit} className="form-cita">
         <div className="form-group">
-          <label htmlFor="motivo">Motivo de cancelación</label>
+          <label htmlFor="motivo">Motivo (Appointment.cancellationReason)</label>
           <select id="motivo" value={motivo} onChange={(e) => setMotivo(e.target.value)} required>
             {MOTIVOS.map((m) => (
               <option key={m.value} value={m.value}>{m.label}</option>

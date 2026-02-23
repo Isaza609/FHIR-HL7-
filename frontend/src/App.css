@@ -387,6 +387,20 @@
   border-bottom: none;
 }
 
+.confirmacion-ref {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-xs);
+}
+
+.confirmacion-ref code {
+  font-family: ui-monospace, monospace;
+  background: var(--color-bg-alt);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
 /* ========== Mensajes ========== */
 .error {
   color: var(--color-error);
@@ -500,6 +514,154 @@
   color: var(--color-text-muted);
   padding: var(--space-lg);
   text-align: center;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: var(--space-sm);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-block {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  color: var(--color-text-muted);
+}
+
+/* ========== Iconos ========== */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+.sede-card .icon,
+.servicio-link .icon {
+  margin-right: var(--space-sm);
+}
+
+/* ========== Detalle FHIR (colapsable) ========== */
+.fhir-detail {
+  margin-top: var(--space-xl);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-bg-alt);
+}
+
+.fhir-detail-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s, color 0.2s;
+}
+
+.fhir-detail-toggle:hover {
+  background: var(--color-card);
+  color: var(--color-text);
+}
+
+.fhir-detail-toggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.fhir-detail-content {
+  padding: var(--space-md) var(--space-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.fhir-detail-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.fhir-detail-list li {
+  padding: var(--space-xs) 0;
+}
+
+.fhir-detail-list code {
+  font-family: ui-monospace, monospace;
+  background: var(--color-card);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+/* ========== Notas de requerimientos (documento de contexto §3) ========== */
+.req-note {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin: var(--space-sm) 0 var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-bg-alt);
+  border-left: 3px solid var(--color-primary);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.req-note-badge {
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-right: var(--space-sm);
+}
+
+.req-section {
+  margin-top: var(--space-xl);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.req-section h3 {
+  font-size: 1rem;
+  margin: 0 0 var(--space-sm);
+  color: var(--color-text-muted);
+}
+
+/* Cobertura (Coverage) / Aseguradora (Organization) – Req. 3 */
+.coverage-block {
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-primary-light);
+  border-left: 4px solid var(--color-primary);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin-bottom: var(--space-lg);
+  font-size: 0.95rem;
+}
+
+.coverage-block .ref-inline {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.coverage-block code {
+  font-family: ui-monospace, monospace;
+  background: var(--color-card);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
 }
 
 /* ========== Responsive ========== */

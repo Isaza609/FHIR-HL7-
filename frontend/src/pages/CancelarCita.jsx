@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { cancelAppointment } from "../services/appointment";
 import { USE_MOCK_DATA } from "../config";
+import PageLayout from "../components/PageLayout";
+import ReqNote from "../components/ReqNote";
+import { Icon } from "../components/Icons";
 
 const MOTIVOS = [
   { value: "pat", label: "Paciente (solicitud del paciente)" },
@@ -27,7 +30,8 @@ export default function CancelarCita() {
     setError(null);
     try {
       if (USE_MOCK_DATA) {
-        navigate("/mis-citas", { state: { cancelled: appointmentId } });
+        const m = MOTIVOS.find((x) => x.value === motivo) || MOTIVOS[0];
+        navigate("/mis-citas", { state: { cancelled: appointmentId, cancellationReason: m.value, cancellationReasonDisplay: m.label } });
         setSubmitting(false);
         return;
       }
@@ -43,33 +47,22 @@ export default function CancelarCita() {
 
   if (!appointmentId) {
     return (
-      <div className="pagina">
-        <header className="header">
-          <Link to="/" className="logo">ACME Salud</Link>
-          <p className="tagline">Cancelar cita</p>
-        </header>
-        <main className="main">
-          <p>No se ha seleccionado una cita. <Link to="/mis-citas">Ver mis citas</Link>.</p>
-        </main>
-      </div>
+      <PageLayout tagline="Cancelar cita" backTo="/mis-citas" backLabel="Volver a mis citas">
+        <p>No se ha seleccionado una cita. <Link to="/mis-citas">Ver mis citas</Link>.</p>
+      </PageLayout>
     );
   }
 
   const formatDate = (d) => (d ? new Date(d).toLocaleString("es-CO") : "");
 
   return (
-    <div className="pagina">
-      <header className="header">
-        <Link to="/" className="logo">ACME Salud</Link>
-        <p className="tagline">Cancelar cita</p>
-      </header>
-      <main className="main">
-        <Link to="/mis-citas" className="back">← Volver a mis citas</Link>
-        <h2>Cancelar cita</h2>
-        <p className="info">Cita: {appointmentId} · {formatDate(appointment?.start)} – {formatDate(appointment?.end)}</p>
+    <PageLayout tagline="Cancelar cita" backTo="/mis-citas" backLabel="Volver a mis citas">
+      <h2><Icon name="cancel" /> Cancelar cita</h2>
+      <ReqNote num={7}>Si el paciente cancela: debe cambiar el estado (Appointment.status) y registrarse el motivo (Appointment.cancellationReason).</ReqNote>
+      <p className="info">Cita (Appointment): {appointmentId} · {formatDate(appointment?.start)} – {formatDate(appointment?.end)}</p>
         <form onSubmit={handleSubmit} className="form-cita">
           <div className="form-group">
-            <label htmlFor="motivo">Motivo de cancelación</label>
+            <label htmlFor="motivo">Motivo de cancelación (Appointment.cancellationReason)</label>
             <select id="motivo" value={motivo} onChange={(e) => setMotivo(e.target.value)} required>
               {MOTIVOS.map((m) => (
                 <option key={m.value} value={m.value}>{m.label}</option>
@@ -81,7 +74,6 @@ export default function CancelarCita() {
             {submitting ? "Cancelando…" : "Confirmar cancelación"}
           </button>
         </form>
-      </main>
-    </div>
+    </PageLayout>
   );
 }

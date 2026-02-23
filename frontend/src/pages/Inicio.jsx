@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fhirGet } from "../services/fhir";
 import { USE_MOCK_DATA } from "../config";
 import { MOCK_LOCATIONS } from "../data/mockData";
-
-/** IDs de Location de ACME (sedes) – coinciden con config/filtros-servidor-publico.json */
-const LOCATION_IDS = ["loc-norte", "loc-centro", "loc-sur"];
+import { getLocations } from "../services/location";
+import LoadingSpinner from "../components/LoadingSpinner";
+import { Icon } from "../components/Icons";
+import ReqNote from "../components/ReqNote";
 
 function getIdentifierValue(location) {
   const id = location.identifier?.[0];
@@ -25,12 +25,8 @@ export default function Inicio() {
       setLoading(false);
       return;
     }
-    const idParam = LOCATION_IDS.join(",");
-    fhirGet(`Location?_id=${idParam}`)
-      .then((bundle) => {
-        const list = bundle.entry?.map((e) => e.resource) || [];
-        setSedes(list);
-      })
+    getLocations()
+      .then(setSedes)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, []);
@@ -38,35 +34,44 @@ export default function Inicio() {
   return (
     <div className="inicio">
       <header className="header">
-        <h1 className="logo">ACME Salud</h1>
+        <Link to="/" className="logo">ACME Salud</Link>
         <p className="tagline">Agenda interoperable de citas</p>
         <Link to="/operador" className="operador-link">Acceso operador (Call Center)</Link>
       </header>
-      <main className="main">
+      <main className="main" role="main" id="main-content">
         <section className="hero">
-          <h2>¿Dónde te atendemos?</h2>
+          <h2><Icon name="location" /> ¿Dónde te atendemos?</h2>
           <p className="intro">Elige la sede más cercana para agendar tu cita de forma rápida y segura.</p>
+          <ReqNote num={5}>Un servidor central FHIR recibe las solicitudes de citas (Appointment) de todos los canales (web, Call Center, app, HIS) para mantener el control centralizado de agendas (Schedule).</ReqNote>
         </section>
-        {loading && <p className="loading-msg">Cargando sedes…</p>}
-        {error && <p className="error">Error al cargar sedes: {error}</p>}
-        {!loading && !error && (
-          <div className="sedes-grid">
-            {sedes.length === 0 ? (
-              <p>No hay sedes disponibles. Asegúrate de tener los recursos Location cargados en el servidor FHIR.</p>
-            ) : (
-              sedes.map((sede) => (
-                <Link
-                  key={sede.id}
-                  to={`/servicios?location=${sede.id}`}
-                  className="sede-card"
-                >
-                  <span className="sede-name">{sede.name || sede.id}</span>
-                  <span className="sede-id">ID: {getIdentifierValue(sede) || sede.id}</span>
-                </Link>
-              ))
-            )}
-          </div>
-        )}
+        <div role="status" aria-live="polite" aria-atomic="true">
+          {loading && (
+            <p className="loading-block">
+              <LoadingSpinner aria-label="Cargando sedes" />
+              Cargando sedes…
+            </p>
+          )}
+          {error && <p className="error">Error al cargar sedes: {error}</p>}
+          {!loading && !error && (
+            <div className="sedes-grid">
+              {sedes.length === 0 ? (
+                <p>No hay sedes disponibles. Asegúrate de tener los recursos Location cargados en el servidor FHIR.</p>
+              ) : (
+                sedes.map((sede) => (
+                  <Link
+                    key={sede.id}
+                    to={`/servicios?location=${sede.id}`}
+                    className="sede-card"
+                    aria-label={`Sede ${sede.name || sede.id}, ir a servicios`}
+                  >
+                    <span className="sede-name"><Icon name="location" /> {sede.name || sede.id}</span>
+                    <span className="sede-id">ID: {getIdentifierValue(sede) || sede.id}</span>
+                  </Link>
+                ))
+              )}
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );

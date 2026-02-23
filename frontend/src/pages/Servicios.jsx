@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { fhirGet } from "../services/fhir";
 import { USE_MOCK_DATA } from "../config";
 import { MOCK_LOCATIONS, MOCK_HEALTHCARE_SERVICES } from "../data/mockData";
+import { getHealthcareServicesByLocation } from "../services/location";
+import PageLayout from "../components/PageLayout";
+import LoadingSpinner from "../components/LoadingSpinner";
+import { Icon } from "../components/Icons";
+import ReqNote from "../components/ReqNote";
 
-const SEDE_NAMES = Object.fromEntries(
-  (MOCK_LOCATIONS || []).map((s) => [s.id, s.name])
-);
+const SEDE_NAMES = Object.fromEntries((MOCK_LOCATIONS || []).map((s) => [s.id, s.name]));
 SEDE_NAMES["loc-norte"] = SEDE_NAMES["loc-norte"] || "Clínica Norte";
 SEDE_NAMES["loc-centro"] = SEDE_NAMES["loc-centro"] || "Clínica Centro";
 SEDE_NAMES["loc-sur"] = SEDE_NAMES["loc-sur"] || "Clínica Sur";
@@ -26,17 +28,12 @@ export default function Servicios() {
     setLoading(true);
     setError(null);
     if (USE_MOCK_DATA) {
-      const list = MOCK_HEALTHCARE_SERVICES[locationId] || [];
-      setServices(list);
+      setServices(MOCK_HEALTHCARE_SERVICES[locationId] || []);
       setLoading(false);
       return;
     }
-    const ref = `Location/${locationId}`;
-    fhirGet(`HealthcareService?location=${encodeURIComponent(ref)}`)
-      .then((bundle) => {
-        const list = bundle.entry?.map((e) => e.resource) || [];
-        setServices(list);
-      })
+    getHealthcareServicesByLocation(locationId)
+      .then(setServices)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [locationId]);
@@ -44,19 +41,21 @@ export default function Servicios() {
   const sedeName = SEDE_NAMES[locationId] || locationId;
 
   return (
-    <div className="pagina">
-      <header className="header">
-        <Link to="/" className="logo">ACME Salud</Link>
-        <p className="tagline">Selección de servicio</p>
-      </header>
-      <main className="main">
-        <Link to="/" className="back">← Volver a sedes</Link>
-        <h2>Servicios en {sedeName}</h2>
-        <p className="intro">Elige el tipo de atención que necesitas.</p>
-        {!locationId && (
-          <p>Selecciona primero una sede en <Link to="/">Inicio</Link>.</p>
+    <PageLayout tagline="Selección de servicio" backTo="/" backLabel="Volver a sedes">
+      <h2><Icon name="service" /> Servicios en {sedeName}</h2>
+      <p className="intro">Elige el tipo de atención que necesitas.</p>
+      <ReqNote num={1}>Cada servicio especializado (HealthcareService) tiene su propia agenda (Schedule) definida mensualmente.</ReqNote>
+      <ReqNote num={2}>Cada médico especialista (Practitioner), en su rol como empleado (PractitionerRole) de ACME Salud, tiene su propia agenda (Schedule) definida mensualmente.</ReqNote>
+      {!locationId && (
+        <p>Selecciona primero una sede en <Link to="/">Inicio</Link>.</p>
+      )}
+      <div role="status" aria-live="polite" aria-atomic="true">
+        {locationId && loading && (
+          <p className="loading-block">
+            <LoadingSpinner aria-label="Cargando servicios" />
+            Cargando servicios…
+          </p>
         )}
-        {locationId && loading && <p className="loading-msg">Cargando servicios…</p>}
         {locationId && error && <p className="error">Error: {error}</p>}
         {locationId && !loading && !error && (
           <ul className="lista-servicios">
@@ -68,15 +67,16 @@ export default function Servicios() {
                   <Link
                     to={`/disponibilidad?healthcareService=${hs.id}&location=${locationId}`}
                     className="servicio-link"
+                    aria-label={`Servicio ${hs.name || hs.id}, ver horarios`}
                   >
-                    {hs.name || hs.id}
+                    <Icon name="service" /> {hs.name || hs.id}
                   </Link>
                 </li>
               ))
             )}
           </ul>
         )}
-      </main>
-    </div>
+      </div>
+    </PageLayout>
   );
 }

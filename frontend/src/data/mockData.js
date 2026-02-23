@@ -65,14 +65,14 @@ function buildMockSlots() {
 
 export const MOCK_SLOTS = buildMockSlots();
 
-/** Pacientes para selector */
+/** Pacientes para selector – con cobertura (Coverage) y aseguradora (Organization) para Req. 3 */
 export const MOCK_PATIENTS = [
-  { id: "patient-1", name: [{ given: ["María"], family: "García López" }] },
-  { id: "patient-2", name: [{ given: ["Carlos"], family: "Rodríguez Pérez" }] },
-  { id: "patient-3", name: [{ given: ["Ana"], family: "Martínez Sánchez" }] },
+  { id: "patient-1", name: [{ given: ["María"], family: "García López" }], coverageRef: "Coverage/cov-001", payorRef: "Organization/org-aseguradora-salud-completa", aseguradoraName: "Salud Completa" },
+  { id: "patient-2", name: [{ given: ["Carlos"], family: "Rodríguez Pérez" }], coverageRef: "Coverage/cov-002", payorRef: "Organization/org-aseguradora-salud-cooperativa", aseguradoraName: "Salud Cooperativa" },
+  { id: "patient-3", name: [{ given: ["Ana"], family: "Martínez Sánchez" }], coverageRef: null, payorRef: null, aseguradoraName: null },
 ];
 
-/** Citas de ejemplo por paciente (Appointment) */
+/** Citas de ejemplo por paciente (Appointment) – incluyen participant PractitionerRole para demo */
 function buildMockAppointments() {
   const s1 = new Date(NOW);
   s1.setHours(10, 0, 0, 0);
@@ -82,13 +82,14 @@ function buildMockAppointments() {
   s2.setHours(14, 0, 0, 0);
   const e2 = new Date(s2);
   e2.setMinutes(e2.getMinutes() + 45);
+  const participantPR = (ref) => [{ actor: { reference: ref }, required: "required", status: "accepted" }];
   return {
     "patient-1": [
-      { id: "appt-1", start: toISO(s1), end: toISO(e1), status: "booked" },
-      { id: "appt-2", start: toISO(s2), end: toISO(e2), status: "booked" },
+      { id: "appt-1", start: toISO(s1), end: toISO(e1), status: "booked", participant: participantPR("PractitionerRole/pr-casas-pediatria-norte"), practitionerRoleRef: "PractitionerRole/pr-casas-pediatria-norte", practitionerName: "Gregorio Casas" },
+      { id: "appt-2", start: toISO(s2), end: toISO(e2), status: "booked", participant: participantPR("PractitionerRole/pr-narvaez-oncologia-sur"), practitionerRoleRef: "PractitionerRole/pr-narvaez-oncologia-sur", practitionerName: "Diego Narváez" },
     ],
     "patient-2": [
-      { id: "appt-3", start: toISO(s2), end: toISO(e2), status: "booked" },
+      { id: "appt-3", start: toISO(s2), end: toISO(e2), status: "booked", participant: participantPR("PractitionerRole/pr-chavez-nefrologia-centro"), practitionerRoleRef: "PractitionerRole/pr-chavez-nefrologia-centro", practitionerName: "Luis Manuel Chávez" },
     ],
     "patient-3": [],
   };

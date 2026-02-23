@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { fhirGet } from "../services/fhir";
-import { createAppointmentAndReserveSlot, getPractitionerRoleForSlot } from "../services/appointment";
+import { createAppointmentAndReserveSlot, getPractitionerRoleForSlot, getPractitionerDisplayName } from "../services/appointment";
+import { getCoverageForPatient } from "../services/coverage";
 import { USE_MOCK_DATA } from "../config";
 import { MOCK_PATIENTS } from "../data/mockData";
+import PageLayout from "../components/PageLayout";
+import LoadingSpinner from "../components/LoadingSpinner";
+import ReqNote from "../components/ReqNote";
 
 const TIPOS_CONSULTA = [
   { value: "primera-vez-medicina-general", label: "Primera vez – Medicina general", code: "124", display: "Primera vez Medicina general" },
@@ -22,6 +26,7 @@ export default function DatosPaciente() {
 
   const [patients, setPatients] = useState([]);
   const [patientId, setPatientId] = useState("");
+  const [coverageInfo, setCoverageInfo] = useState({ coverageId: null, payorRef: null, aseguradoraName: "" });
   const [tipoConsulta, setTipoConsulta] = useState(TIPOS_CONSULTA[0].value);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -44,6 +49,23 @@ export default function DatosPaciente() {
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    if (!patientId) {
+      setCoverageInfo({ coverageId: null, payorRef: null, aseguradoraName: "" });
+      return;
+    }
+    if (USE_MOCK_DATA) {
+      const p = patients.find((x) => x.id === patientId);
+      setCoverageInfo({
+        coverageId: p?.coverageRef?.replace("Coverage/", "") || null,
+        payorRef: p?.payorRef || null,
+        aseguradoraName: p?.aseguradoraName || "",
+      });
+      return;
+    }
+    getCoverageForPatient(patientId).then(setCoverageInfo);
+  }, [patientId, patients]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!slotId || !slotResource || !patientId) {
@@ -63,12 +85,21 @@ export default function DatosPaciente() {
             tipoConsulta: tipo.label,
             servicio: tipo.display,
             appointmentId: "appt-mock-" + Date.now(),
+            practitionerName: "Diego Narváez (ejemplo)",
+            practitionerRoleRef: "PractitionerRole/pr-narvaez-oncologia-sur",
+            slotId,
+            patientRef: patientId ? `Patient/${patientId}` : null,
+            comentarios: "Cita programada según disponibilidad de la agenda.",
+            aseguradoraName: coverageInfo.aseguradoraName,
+            coverageRef: coverageInfo.coverageId ? `Coverage/${coverageInfo.coverageId}` : null,
+            payorRef: coverageInfo.payorRef,
           },
         });
         setSubmitting(false);
         return;
       }
       const practitionerRoleRef = await getPractitionerRoleForSlot(slotResource);
+      const practitionerName = await getPractitionerDisplayName(practitionerRoleRef);
       const tipo = TIPOS_CONSULTA.find((t) => t.value === tipoConsulta) || TIPOS_CONSULTA[0];
       const { appointmentId } = await createAppointmentAndReserveSlot({
         slotId,
@@ -88,6 +119,13 @@ export default function DatosPaciente() {
           tipoConsulta: tipo.label,
           servicio: tipo.display,
           appointmentId,
+          practitionerName: practitionerName || "Asignado según agenda",
+          slotId,
+          practitionerRoleRef,
+          patientRef: patientId ? `Patient/${patientId}` : null,
+          aseguradoraName: coverageInfo.aseguradoraName,
+          coverageRef: coverageInfo.coverageId ? `Coverage/${coverageInfo.coverageId}` : null,
+          payorRef: coverageInfo.payorRef,
         },
       });
     } catch (err) {
@@ -99,44 +137,49 @@ export default function DatosPaciente() {
 
   if (!slotId || !slotResource) {
     return (
-      <div className="pagina">
-        <header className="header">
-          <Link to="/" className="logo">ACME Salud</Link>
-          <p className="tagline">Datos para la cita</p>
-        </header>
-        <main className="main">
-          <p>No se ha seleccionado un horario. <Link to="/">Volver al inicio</Link> y elige sede, servicio y un slot.</p>
-        </main>
-      </div>
+      <PageLayout tagline="Datos para la cita" backTo="/" backLabel="Volver al inicio">
+        <p>No se ha seleccionado un horario. <Link to="/">Volver al inicio</Link> y elige sede, servicio y un horario.</p>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="pagina">
-      <header className="header">
-        <Link to="/" className="logo">ACME Salud</Link>
-        <p className="tagline">Datos para la cita</p>
-      </header>
-      <main className="main">
-        <Link to={`/disponibilidad?healthcareService=${healthcareServiceId || ""}&location=${locationId || ""}`} className="back">← Volver a horarios</Link>
-        <h2>Datos del paciente y tipo de consulta</h2>
-        <p className="info">Horario elegido: {slotStart} – {slotEnd}</p>
-        <form onSubmit={handleSubmit} className="form-cita">
-          <div className="form-group">
-            <label htmlFor="patient">Paciente</label>
-            {loading ? (
-              <p className="loading-msg">Cargando pacientes…</p>
-            ) : (
+    <PageLayout
+      tagline="Datos para la cita"
+      backTo={`/disponibilidad?healthcareService=${healthcareServiceId || ""}&location=${locationId || ""}`}
+      backLabel="Volver a horarios"
+    >
+      <h2>Datos del paciente y tipo de consulta</h2>
+      <ReqNote num={3}>La información del paciente (Patient) se relaciona con su cobertura (Coverage) para determinar tiempos de consulta según la aseguradora (Organization).</ReqNote>
+      <p className="info">Horario elegido: {slotStart} – {slotEnd}</p>
+      <form onSubmit={handleSubmit} className="form-cita">
+        <div className="form-group">
+          <label htmlFor="patient">Paciente</label>
+          {loading ? (
+            <p className="loading-block"><LoadingSpinner aria-label="Cargando pacientes" /> Cargando pacientes…</p>
+          ) : (
               <select id="patient" value={patientId} onChange={(e) => setPatientId(e.target.value)} required>
                 <option value="">Seleccione un paciente</option>
                 {patients.map((p) => {
                   const name = p.name?.[0];
                   const text = name ? [name.given?.join(" "), name.family].filter(Boolean).join(" ") : p.id;
-                  return <option key={p.id} value={p.id}>{text || p.id}</option>;
+                  const cov = p.aseguradoraName ? ` · ${p.aseguradoraName}` : "";
+                  return <option key={p.id} value={p.id}>{text || p.id}{cov}</option>;
                 })}
               </select>
             )}
           </div>
+          {patientId && (coverageInfo.aseguradoraName || coverageInfo.payorRef) && (
+            <div className="coverage-block">
+              <strong>Cobertura (Coverage)</strong> – Req. 3:{" "}
+              {coverageInfo.aseguradoraName && <span>{coverageInfo.aseguradoraName}</span>}
+              {coverageInfo.coverageId && <span className="ref-inline"> · Coverage/{coverageInfo.coverageId}</span>}
+              {coverageInfo.payorRef && <span className="ref-inline"> · Aseguradora (Organization): <code>{coverageInfo.payorRef}</code></span>}
+            </div>
+          )}
+          {patientId && !coverageInfo.aseguradoraName && !coverageInfo.payorRef && (
+            <p className="info">Este paciente no tiene cobertura (Coverage) registrada.</p>
+          )}
           <div className="form-group">
             <label htmlFor="tipo">Tipo de consulta</label>
             <select id="tipo" value={tipoConsulta} onChange={(e) => setTipoConsulta(e.target.value)} required>
@@ -150,7 +193,6 @@ export default function DatosPaciente() {
             {submitting ? "Agendando…" : "Confirmar y agendar cita"}
           </button>
         </form>
-      </main>
-    </div>
+    </PageLayout>
   );
 }
