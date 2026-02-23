@@ -249,6 +249,38 @@
             "url": "{{baseUrl}}/Slot?schedule=Schedule/sched-pr-casas-2025-02&status=free",
             "description": "Slots libres de una agenda concreta."
           }
+        },
+        {
+          "name": "PUT Slot a busy (marcar ocupado)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/fhir+json" },
+              { "key": "Content-Type", "value": "application/fhir+json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Slot\",\n  \"id\": \"slot-pediatria-001\",\n  \"meta\": { \"profile\": [\"http://hl7.org/fhir/StructureDefinition/Slot\"] },\n  \"schedule\": { \"reference\": \"Schedule/sched-pr-casas-2025-02\" },\n  \"status\": \"busy\",\n  \"start\": \"2025-02-19T08:00:00-05:00\",\n  \"end\": \"2025-02-19T08:30:00-05:00\"\n}"
+            },
+            "url": "{{baseUrl}}/Slot/slot-pediatria-001",
+            "description": "Marca el slot como ocupado (status=busy). Ejecutar después de crear la cita (PUT Appointment). Cambiar id y start/end si usas otro slot."
+          }
+        },
+        {
+          "name": "PUT Slot a free (liberar slot)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/fhir+json" },
+              { "key": "Content-Type", "value": "application/fhir+json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Slot\",\n  \"id\": \"slot-pediatria-001\",\n  \"meta\": { \"profile\": [\"http://hl7.org/fhir/StructureDefinition/Slot\"] },\n  \"schedule\": { \"reference\": \"Schedule/sched-pr-casas-2025-02\" },\n  \"status\": \"free\",\n  \"start\": \"2025-02-19T08:00:00-05:00\",\n  \"end\": \"2025-02-19T08:30:00-05:00\"\n}"
+            },
+            "url": "{{baseUrl}}/Slot/slot-pediatria-001",
+            "description": "Libera el slot (status=free). Ejecutar después de cancelar la cita (PUT Cancelar cita). Así el slot vuelve a aparecer en GET Slots libres."
+          }
         }
       ]
     },
@@ -280,6 +312,38 @@
             "header": [{ "key": "Accept", "value": "application/fhir+json" }],
             "url": "{{baseUrl}}/Appointment?status=booked",
             "description": "Sin filtro; en servidor público preferir 'Nuestras citas'."
+          }
+        },
+        {
+          "name": "PUT Crear cita (Appointment)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/fhir+json" },
+              { "key": "Content-Type", "value": "application/fhir+json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Appointment\",\n  \"id\": \"appt-ejemplo\",\n  \"meta\": { \"profile\": [\"http://hl7.org/fhir/StructureDefinition/Appointment\"] },\n  \"status\": \"booked\",\n  \"start\": \"2025-02-19T08:00:00-05:00\",\n  \"end\": \"2025-02-19T08:30:00-05:00\",\n  \"slot\": [{ \"reference\": \"Slot/slot-pediatria-001\" }],\n  \"serviceType\": [{ \"coding\": [{ \"system\": \"http://terminology.hl7.org/CodeSystem/service-type\", \"code\": \"57\", \"display\": \"Control - Pediatría\" }] }],\n  \"participant\": [\n    { \"actor\": { \"reference\": \"Patient/pat-ejemplo-001\" }, \"required\": \"required\", \"status\": \"accepted\" },\n    { \"actor\": { \"reference\": \"PractitionerRole/pr-casas-pediatria-norte\" }, \"required\": \"required\", \"status\": \"accepted\" }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/Appointment/appt-ejemplo",
+            "description": "Crea una cita (Appointment). Referencia Slot, Patient y PractitionerRole. Después ejecutar 'PUT Slot a busy' para el slot referenciado (ej. slot-pediatria-001). Cuerpo desde fhir_resources/Appointment/appt-ejemplo.json."
+          }
+        },
+        {
+          "name": "PUT Cancelar cita (Appointment)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/fhir+json" },
+              { "key": "Content-Type", "value": "application/fhir+json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Appointment\",\n  \"id\": \"appt-ejemplo\",\n  \"meta\": { \"profile\": [\"http://hl7.org/fhir/StructureDefinition/Appointment\"] },\n  \"status\": \"cancelled\",\n  \"cancelationReason\": {\n    \"coding\": [{ \"system\": \"http://terminology.hl7.org/CodeSystem/appointment-cancellation-reason\", \"code\": \"pat\", \"display\": \"Patient\" }]\n  },\n  \"start\": \"2025-02-19T08:00:00-05:00\",\n  \"end\": \"2025-02-19T08:30:00-05:00\",\n  \"slot\": [{ \"reference\": \"Slot/slot-pediatria-001\" }],\n  \"serviceType\": [{ \"coding\": [{ \"system\": \"http://terminology.hl7.org/CodeSystem/service-type\", \"code\": \"57\", \"display\": \"Control - Pediatría\" }] }],\n  \"participant\": [\n    { \"actor\": { \"reference\": \"Patient/pat-ejemplo-001\" }, \"required\": \"required\", \"status\": \"accepted\" },\n    { \"actor\": { \"reference\": \"PractitionerRole/pr-casas-pediatria-norte\" }, \"required\": \"required\", \"status\": \"accepted\" }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/Appointment/appt-ejemplo",
+            "description": "Cancela la cita (status=cancelled, cancelationReason). Después ejecutar 'PUT Slot a free' para el slot referenciado y que vuelva a estar disponible. Cuerpo desde fhir_resources/Appointment/appt-ejemplo-cancelado.json."
           }
         }
       ]

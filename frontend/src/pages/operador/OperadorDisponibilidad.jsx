@@ -54,10 +54,10 @@ export default function OperadorDisponibilidad() {
     }
     const load = async () => {
       try {
-        let scheduleIds = DEFAULT_SCHEDULE_IDS;
+        let scheduleIds = [...DEFAULT_SCHEDULE_IDS];
         if (serviceId) {
           const ids = await getScheduleIdsByHealthcareService(serviceId);
-          if (ids.length > 0) scheduleIds = ids;
+          if (ids.length > 0) scheduleIds = [...new Set([...ids, ...DEFAULT_SCHEDULE_IDS])];
         }
         const bundle = await getSlotsFree(scheduleIds);
         const list = bundle.entry?.map((e) => e.resource) || [];
@@ -130,7 +130,12 @@ export default function OperadorDisponibilidad() {
           </p>
         )}
         {error && <p className="error">Error: {error}</p>}
-        {!loading && !error && locationId && (
+        {!loading && !error && locationId && slots.length === 0 && (
+          <p className="info">
+            No hay horarios disponibles. Si usas el servidor FHIR público (HAPI), carga antes los recursos: <code>python scripts/cargar_recursos.py</code>
+          </p>
+        )}
+        {!loading && !error && locationId && slots.length > 0 && (
           <SlotList slots={slots} onChoose={handleElegir} buttonLabel="Elegir para agendar" />
         )}
       </div>

@@ -32,6 +32,8 @@ Abre la URL que muestre Vite (ej. http://localhost:5173).
 
 **Importante:** En desarrollo, las peticiones al servidor FHIR pasan por un **proxy** (Vite) para evitar errores de CORS en el navegador. La app llama a `http://localhost:5173/api/fhir/...` y Vite reenvía a `http://hapi.fhir.org/baseR4/...`. Si no ves datos, reinicia el servidor (`Ctrl+C` y luego `npm run dev` de nuevo).
 
+**Horarios disponibles vacíos:** Si usas el servicio real (`VITE_USE_MOCK_DATA=false`) y en "Horarios disponibles" no aparece ningún slot, el servidor puede no tener aún los recursos del proyecto. Desde la **raíz del repositorio** ejecuta una vez: `python scripts/cargar_recursos.py`. Eso sube Organization, Location, HealthcareService, Schedule, Slot, etc. a HAPI. Después recarga la página.
+
 ## Canales
 
 - **Sitio web / app:** rutas `/`, `/servicios`, `/disponibilidad`, etc. (flujo paciente).

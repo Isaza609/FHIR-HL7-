@@ -18,8 +18,9 @@ export const DEFAULT_SCHEDULE_IDS = [
 export async function getSlotsFree(scheduleIds = DEFAULT_SCHEDULE_IDS) {
   const params = new URLSearchParams();
   params.set("status", "free");
+  // HAPI espera el id del Schedule sin prefijo "Schedule/" en la búsqueda
   scheduleIds.forEach((id) => {
-    params.append("schedule", `Schedule/${id}`);
+    params.append("schedule", id);
   });
   const path = `Slot?${params.toString()}`;
   return fhirGet(path);

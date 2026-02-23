@@ -28,10 +28,14 @@ export default function Disponibilidad() {
     }
     const load = async () => {
       try {
-        let scheduleIds = DEFAULT_SCHEDULE_IDS;
+        let scheduleIds = [...DEFAULT_SCHEDULE_IDS];
         if (healthcareServiceId) {
-          const ids = await getScheduleIdsByHealthcareService(healthcareServiceId);
-          if (ids.length > 0) scheduleIds = ids;
+          try {
+            const ids = await getScheduleIdsByHealthcareService(healthcareServiceId);
+            if (ids.length > 0) scheduleIds = [...new Set([...ids, ...DEFAULT_SCHEDULE_IDS])];
+          } catch {
+            // Si falla la búsqueda de Schedules (ej. CORS), usamos los IDs por defecto
+          }
         }
         const bundle = await getSlotsFree(scheduleIds);
         const list = bundle.entry?.map((e) => e.resource) || [];
@@ -76,7 +80,12 @@ export default function Disponibilidad() {
           </p>
         )}
         {error && <p className="error">Error: {error}</p>}
-        {!loading && !error && (
+        {!loading && !error && slots.length === 0 && (
+          <p className="info">
+            No hay horarios disponibles. Si usas el servidor FHIR público (HAPI), carga antes los recursos del proyecto desde la raíz del repo: <code>python scripts/cargar_recursos.py</code>
+          </p>
+        )}
+        {!loading && !error && slots.length > 0 && (
           <SlotList slots={slots} onChoose={handleElegir} buttonLabel="Elegir" />
         )}
       </div>

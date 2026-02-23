@@ -32,6 +32,22 @@ El servidor **hapi.fhir.org** es compartido con otros proyectos. Para no traer d
 - **Slot:** no uses una consulta sin `schedule`; usa **GET Slots libres (solo nuestros)** o **GET Slots por un Schedule**.
 - **Appointment:** usa **GET Nuestras citas (solo ACME por sede)** en lugar de una búsqueda sin filtro.
 
+## Flujo agendamiento (crear cita y marcar slot ocupado)
+
+Para demostrar el flujo completo de agendamiento:
+
+1. **Slot** → **GET Slots libres (solo nuestros)** o **GET Slots por un Schedule** (ver slots con `status=free`).
+2. **Appointment** → **PUT Crear cita (Appointment)**: crea la cita referenciando un Slot, Patient y PractitionerRole (cuerpo basado en `fhir_resources/Appointment/appt-ejemplo.json`).
+3. **Slot** → **PUT Slot a busy (marcar ocupado)**: actualiza el mismo slot a `status=busy` para que deje de aparecer como disponible.
+
+## Flujo cancelación (cancelar cita y liberar slot)
+
+Para demostrar la cancelación de una cita:
+
+1. **Appointment** → **GET Appointment por id** (opcional: para ver la cita y el slot que referencia).
+2. **Appointment** → **PUT Cancelar cita (Appointment)**: actualiza la cita con `status=cancelled` y `cancelationReason` (cuerpo desde `fhir_resources/Appointment/appt-ejemplo-cancelado.json`).
+3. **Slot** → **PUT Slot a free (liberar slot)**: actualiza el slot a `status=free` para que vuelva a aparecer en la consulta de slots libres.
+
 Los IDs de ACME están en `config/filtros-servidor-publico.json`.
 
 ## Nota sobre hapi.fhir.org
