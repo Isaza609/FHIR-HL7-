@@ -27,25 +27,36 @@ export default function Disponibilidad() {
       return;
     }
     const load = async () => {
+  try {
+    let scheduleIds = [...DEFAULT_SCHEDULE_IDS];
+
+    if (healthcareServiceId) {
       try {
-        let scheduleIds = [...DEFAULT_SCHEDULE_IDS];
-        if (healthcareServiceId) {
-          try {
-            const ids = await getScheduleIdsByHealthcareService(healthcareServiceId);
-            if (ids.length > 0) scheduleIds = [...new Set([...ids, ...DEFAULT_SCHEDULE_IDS])];
-          } catch {
-            // Si falla la búsqueda de Schedules (ej. CORS), usamos los IDs por defecto
-          }
+        const ids = await getScheduleIdsByHealthcareService(healthcareServiceId);
+        if (ids.length > 0) {
+          scheduleIds = [...new Set([...ids, ...DEFAULT_SCHEDULE_IDS])];
         }
-        const bundle = await getSlotsFree(scheduleIds);
-        const list = bundle.entry?.map((e) => e.resource) || [];
-        setSlots(list);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      } catch {
+        // fallback silencioso
       }
-    };
+    }
+
+    let allSlots = [];
+
+    for (const id of scheduleIds) {
+      const bundle = await getSlotsFree([id]); // consulta uno por uno
+      const list = bundle.entry?.map(e => e.resource) || [];
+      allSlots = allSlots.concat(list);
+    }
+
+    setSlots(allSlots);
+
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
     load();
   }, [healthcareServiceId]);
 
